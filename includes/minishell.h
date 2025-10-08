@@ -259,4 +259,6 @@ void	print_declare_format(char *env_var);
 // exit_utils.c
 int	count_args(char **args);
 
+char	**clean_args(char **args);
+
 #endif

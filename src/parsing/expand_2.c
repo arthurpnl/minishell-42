@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 19:57:40 by mehdi             #+#    #+#             */
-/*   Updated: 2025/09/25 17:04:02 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/08 09:34:27 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,4 @@ char	*expand_status(char *res, int status, int *i)
 	sprintf(buf, "%d", status);
 	*i += 2;
 	return (ft_strjoin(res, buf));
-}
-
-int	count_words(t_token_word *word)
-{
-	int	count;
-
-	count = 0;
-	while (word)
-	{
-		count++;
-		word = word->next;
-	}
-	return (count);
 }

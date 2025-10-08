@@ -1,34 +1,3 @@
-#include <stdlib.h>
-
-// Filtre les arguments vides sauf si c'est le seul
-char **clean_args(char **args)
-{
-	int count = 0, i, j;
-	char **new_args;
-	if (!args)
-		return NULL;
-	// Compter le nombre d'arguments non vides
-	for (i = 0; args[i]; i++)
-		if (args[i][0] != '\0')
-			count++;
-	// Si tous sont vides ou un seul argument, on garde le tableau tel quel
-	if (count == 0 || i == 1)
-		return args;
-	new_args = malloc(sizeof(char *) * (count + 1));
-	if (!new_args)
-		return args;
-	j = 0;
-	for (i = 0; args[i]; i++)
-	{
-		if (args[i][0] != '\0')
-			new_args[j++] = args[i];
-		else
-			free(args[i]);
-	}
-	new_args[j] = NULL;
-	free(args);
-	return new_args;
-}
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -37,7 +6,7 @@ char **clean_args(char **args)
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 08:38:58 by mehdi             #+#    #+#             */
-/*   Updated: 2025/10/05 17:47:30 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/08 09:35:23 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +97,7 @@ t_commande	*tokens_to_command(t_token *tokens)
 {
 	t_commande	*head;
 	t_commande	*curr;
+	t_commande	*tmp;
 
 	head = NULL;
 	curr = NULL;
@@ -143,8 +113,7 @@ t_commande	*tokens_to_command(t_token *tokens)
 			return (NULL);
 		tokens = tokens->next;
 	}
-	// Nettoyer les arguments vides pour chaque commande
-	t_commande *tmp = head;
+	tmp = head;
 	while (tmp)
 	{
 		tmp->args = clean_args(tmp->args);

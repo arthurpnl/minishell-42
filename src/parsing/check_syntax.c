@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 11:29:34 by mehdi             #+#    #+#             */
-/*   Updated: 2025/09/24 19:03:36 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/08 09:13:07 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 static int	check_pipe_rules(t_token *curr)
 {
-	// Avancer sur les redirections après le pipe
-		t_token *next = curr->next;
-		if (!next)
+	t_token	*next;
+
+	next = curr->next;
+	if (!next)
+		return (print_pipe_error());
+	while (next && is_redirection(next->type))
+	{
+		if (!next->next || next->next->type != TOK_WORD)
 			return (print_pipe_error());
-		while (next && is_redirection(next->type))
-		{
-			// Une redirection doit être suivie d'un mot
-			if (!next->next || next->next->type != TOK_WORD)
-				return (print_pipe_error());
-			next = next->next->next;
-		}
-		if (next && next->type == TOK_PIPE)
-			return (print_pipe_error());
-		return (0);
+		next = next->next->next;
+	}
+	if (next && next->type == TOK_PIPE)
+		return (print_pipe_error());
+	return (0);
 }
 
 static int	check_redir_rules(t_token *curr)
