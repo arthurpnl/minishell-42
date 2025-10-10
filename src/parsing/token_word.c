@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:24:43 by mehdi             #+#    #+#             */
-/*   Updated: 2025/09/24 19:20:43 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/09 15:55:30 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,17 @@ static int	add_word_to_list(t_token_word **head, char *str, t_shell_ctx *ctx)
 	if (!new)
 		return (1);
 	if (fill_expandable(new))
+	{
+		free(new->word);
+		free(new);
 		return (1);
+	}
 	if (expand_token_word(new, ctx))
+	{
+		free(new->word);
+		free(new);
 		return (1);
+	}
 	add_back_word(head, new);
 	return (0);
 }

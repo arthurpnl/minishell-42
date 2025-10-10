@@ -31,15 +31,15 @@ static int	exit_shell(t_shell_ctx *ctx)
 
 static void	handle_unclosed_quote(char *input, t_shell_ctx *ctx)
 {
-	(void)ctx; // peut-être utile plus tard si tu veux set last_status
+	ctx->last_status = 2;
 	printf("unclosed quote\n");
 	free(input);
 }
 
 static void	process_input(char *input, t_shell_ctx *ctx)
 {
-	char	*str;
-	t_token	*head;
+	char		*str;
+	t_token		*head;
 	t_commande	*cmds;
 
 	head = NULL;
@@ -47,8 +47,8 @@ static void	process_input(char *input, t_shell_ctx *ctx)
 	free(input);
 	if (!str)
 	{
-		perror("malloc_error");
-		ctx->last_status = 1;
+		ft_putstr_fd("malloc_error\n", 2);
+		ctx->last_status = 2;
 		return ;
 	}
 	if (tokenize_line(&head, str, ctx))
@@ -65,7 +65,6 @@ static void	process_input(char *input, t_shell_ctx *ctx)
 		ctx->last_status = 2;
 		return ;
 	}
-
 	cmds = tokens_to_command(head);
 	if (!cmds)
 	{
@@ -100,7 +99,7 @@ int	main(int ac, char **av, char **envp)
 	ctx.env = ft_cpy_envp(envp);
 	if (!ctx.env)
 	{
-		perror("malloc_error");
+		ft_putstr_fd("malloc_error\n", 2);
 		return (1);
 	}
 	ctx.last_status = 0;

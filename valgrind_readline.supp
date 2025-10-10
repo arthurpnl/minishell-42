@@ -1,0 +1,23 @@
+{
+   ignore_readline_leaks
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   obj:/usr/lib/*/libreadline.so.*
+}
+{
+   ignore_history_leaks
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   obj:/usr/lib/*/libhistory.so.*
+}
+{
+   ignore_tinfo_leaks
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:/usr/lib/*/libtinfo.so.*
+}
