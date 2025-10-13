@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 14:04:34 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/13 16:15:04 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 		cmd_path = create_full_path(cmd_list, ctx->env);
 		if (!cmd_path)
 		{
-			ft_putstr_fd(SHELL_NAME, 2);
-			//ft_putstr_fd(cmd_list->args[0], 2);
+			//ft_putstr_fd(SHELL_NAME, 2);
+			ft_putstr_fd(cmd_list->args[0], 2);
+			//ft_putstr_fd(cmd_list)
 			ft_putstr_fd(CMD_NOT_FOUND, 2);
-			// ajouter l'input de l'user "xx: command not found"
 			exit(127);
 		}
 		if (dispatch_redirect(cmd_list) != 0)
@@ -127,11 +127,13 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	t_pipeline *pipeline;
 	t_commande *curr;
 	int i;
-	int status = 0;
+	//int status = 0;
 
 	i = 0;
 	curr = cmd_list;
 	pipeline = malloc(sizeof(t_pipeline));
+	if (!pipeline)
+		return (1);
 	init_pipeline(pipeline, cmd_list, ctx->env);
 
 	if (create_pipes(pipeline) != 0)
@@ -143,6 +145,7 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 		if (pid < 0)
 		{
 			perror("fork");
+			free_pipeline_resources(pipeline);
 			exit(EXIT_FAILURE);
 		}
 		if (pid == 0)
@@ -155,8 +158,9 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 		i++;
 	}
 	close_all_pipes(pipeline->pipes, pipeline->cmd_count);
-	status = close_and_wait(pipeline, ctx);
-	return (status);
+	ctx->last_status = close_and_wait(pipeline, ctx);
+	free_pipeline_resources(pipeline);
+	return (ctx->last_status);
 }
 
 void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,

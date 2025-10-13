@@ -27,7 +27,9 @@
 #include <sys/types.h>
 # include "../Libft/includes/libft.h"
 # define SHELL_NAME "minishell: "
-# define CMD_NOT_FOUND " command not found\n"
+# define CMD_NOT_FOUND ": command not found\n"
+# define COLOR_RESET   "\001\033[0m\002"
+# define COLOR_RED     "\001\033[1;31m\002"
 
 typedef enum	e_token_type
 {
@@ -205,11 +207,13 @@ int	can_exec(char *path, t_shell_ctx *ctx);
 
 // free.c
 void	free_pipes(int **pipes, int count);
+void	free_pipeline_resources(t_pipeline *pipeline);
 void	close_all_pipes(int **pipes, int count);
 
 // here_doc.c
 int	is_it_delimiter(char *line, char *delimiter);
 int	handle_heredoc_redirect(t_redirection *redir);
+int	process_all_heredocs(t_commande *cmd_list);
 
 // path.c
 void	get_path_env(t_commande *cmd_list, char **env);

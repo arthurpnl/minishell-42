@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:59:16 by arthur            #+#    #+#             */
-/*   Updated: 2025/08/25 15:55:01 by arthur           ###   ########.fr       */
+/*   Updated: 2025/10/13 16:13:09 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,17 @@ void	free_pipes(int **pipes, int count)
 		i++;
 	}
 	free(pipes);
+}
+
+void	free_pipeline_resources(t_pipeline *pipeline)
+{
+	if (!pipeline)
+		return ;
+	if (pipeline->pipes)
+		free_pipes(pipeline->pipes, pipeline->cmd_count);  // ← Utilise free_pipes()
+	if (pipeline->pids)
+		free(pipeline->pids);
+	free(pipeline);
 }
 
 void	close_all_pipes(int **pipes, int count)

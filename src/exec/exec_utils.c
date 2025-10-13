@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/09/29 18:33:12 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/13 15:55:48 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,21 +176,21 @@ int	can_exec(char *path, t_shell_ctx *ctx)
 
 	if (stat(path, &infos) != 0) // fichier non existant
 	{
-		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(SHELL_NAME , 2);
 		ft_putstr_fd(path, 2);
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
 		return (ctx->last_status = 127);
 	}
 	if (!S_ISREG(infos.st_mode)) // type special ou repertoire
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd("path", 2);
+		ft_putstr_fd(SHELL_NAME, 2);
+		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": Is a directory\n", 2);
 		return (ctx->last_status = 126);
 	}
 	if (!(infos.st_mode & S_IXUSR)) // pas de perm
 	{
-		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(SHELL_NAME, 2);
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		return (ctx->last_status = 126);

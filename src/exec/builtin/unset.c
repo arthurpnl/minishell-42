@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 16:30:54 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/06 18:06:47 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/13 14:35:40 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ int	ft_unset(char **args, t_shell_ctx *ctx)
 		return (0);
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-		{
-			ft_putstr_fd("minishell: unset: '", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-		}
-		else
+		if (is_valid_identifier(args[i]))
+		// {
+		// 	ft_putstr_fd("minishell: unset: '", 2);
+		// 	ft_putstr_fd(args[i], 2);
+		// 	ft_putstr_fd("': not a valid identifier\n", 2);
+		//  }
+		// else
 			unset_one_arg(ctx, args[i]);
 		i++;
 	}

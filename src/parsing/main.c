@@ -107,7 +107,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		input = readline("minishell$ ");
+		input = readline(COLOR_RED "minishell$ " COLOR_RESET);
 		if (!input)
 			return (exit_shell(&ctx)); // libère ctx.env et sort proprement
 		if (*input)
