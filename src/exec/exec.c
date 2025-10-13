@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/09/29 19:13:56 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/13 14:04:34 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,13 @@
 
 int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 {
+	int	res;
 	if (is_empty_cmd(cmd_list))
 		return (ctx->last_status = 0);
+
+	res = process_all_heredocs(cmd_list);
+	if (res != 0)
+		return (ctx->last_status = res);
 	identify_cmd_type(cmd_list);
 	if (!cmd_list->next)
 	{

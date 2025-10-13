@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/09/26 17:14:22 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/13 14:14:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ int	dispatch_redirect(t_commande *cmd_list)
 			res = handle_append_redirect(current);
 		else if (current->type == TOK_HEREDOC)
 		{
-			res = handle_heredoc_redirect(current);
-			if (res == 0)
+			if (current->fd != -1)
 			{
 				dup2(current->fd, STDIN_FILENO);
 				close(current->fd);
+				res = 0;
 			}
+			else
+				res = -1;
 		}
 		if (res != 0)
 			return (res);
