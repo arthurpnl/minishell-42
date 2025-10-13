@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 16:15:04 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/13 16:59:26 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	t_pipeline *pipeline;
 	t_commande *curr;
 	int i;
-	//int status = 0;
 
 	i = 0;
 	curr = cmd_list;
@@ -163,101 +162,5 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	return (ctx->last_status);
 }
 
-void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
-		int i)
-{
-	if (pipeline->cmd_count > 1)
-		handle_pipe_redirect(pipeline->pipes, i, pipeline->cmd_count);
-	if (dispatch_redirect(cmd_list) != 0)
-		exit(EXIT_FAILURE);
-	if (cmd_list->type == CMD_BUILTIN)
-		exit(exec_builtin(cmd_list, ctx));
-	else
-		exec_command_direct(cmd_list, ctx);
-}
 
-/*void exec_child(t_commande *cmd_list, t_pipeline *pipeline, char **env, int i)
-{
-	int	status;
-	int	last_status;
 
-	if (pipeline->cmd_count > 1)
-		handle_pipe_redirect(pipeline->pipes, i, pipeline->cmd_count);
-	if (dispatch_redirect(cmd_list) != 0)
-		exit(EXIT_FAILURE);
-	if (cmd_list->type == CMD_BUILTIN)
-		exit(exec_builtin(cmd_list, env));
-	else
-		exec_command_direct(cmd_list, env);
-}*/
-int close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx)
-{
-	int i;
-	int status;
-	int last_status;
-
-	if (!pipeline || !pipeline->pids)
-		return (1);
-
-	last_status = 0;
-	i = 0;
-	while (i < pipeline->cmd_count)
-	{
-		if (waitpid(pipeline->pids[i], &status, 0) > 0)
-		{
-			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				last_status = 128 + WTERMSIG(status);
-		}
-		i++;
-	}
-	ctx->last_status = last_status;
-	return (last_status);
-}
-
-int	exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
-{
-	if (!cmd_list || !cmd_list->args || !cmd_list->args[0])
-		return (1);
-	if (ft_strcmp(cmd_list->args[0], "echo") == 0)
-		ctx->last_status = ft_echo(cmd_list->args);
-	else if (ft_strcmp(cmd_list->args[0], "cd") == 0)
-		ctx->last_status = ft_cd(cmd_list->args, ctx);
-	else if (ft_strcmp(cmd_list->args[0], "pwd") == 0)
-		ctx->last_status = ft_pwd();
-	else if (ft_strcmp(cmd_list->args[0], "export") == 0)
-		ctx->last_status = ft_export(cmd_list->args, ctx);
-	else if (ft_strcmp(cmd_list->args[0], "unset") == 0)
-		ctx->last_status = ft_unset(cmd_list->args, ctx);
-	else if (ft_strcmp(cmd_list->args[0], "env") == 0)
-		ctx->last_status = ft_env(ctx->env);
-	else if (ft_strcmp(cmd_list->args[0], "exit") == 0)
-		ctx->last_status = ft_exit(cmd_list->args, ctx);
-	else
-		ctx->last_status = 1;
-	return (ctx->last_status);
-}
-
-int	exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx)
-{
-	int	pid;
-
-	if (!cmd_list || !cmd_list->args || !cmd_list->args[0])
-		return (1);
-	if (!cmd_list->redirection)
-		return (exec_builtin_cmd(cmd_list, ctx));
-	pid = fork();
-	if (pid == 0)
-	{
-		if (dispatch_redirect(cmd_list) != 0)
-			exit(EXIT_FAILURE);
-		exit(exec_builtin_cmd(cmd_list, ctx));
-	}
-	else if (pid > 0)
-	{
-		waitpid(pid, &ctx->last_status, 0);
-		return (ctx->last_status >> 8);
-	}
-	return (ctx->last_status = 1);
-}

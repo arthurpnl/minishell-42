@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:45:25 by arthur            #+#    #+#             */
-/*   Updated: 2025/08/25 14:55:06 by arthur           ###   ########.fr       */
+/*   Updated: 2025/10/13 16:55:06 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,15 @@ int	create_pipes(t_pipeline *pipeline)
 		i++;
 	}
 	return (0);
+}
+
+void	init_pipeline(t_pipeline *pipeline, t_commande *cmd_list, char **env)
+{
+	pipeline->cmd_list = cmd_list;
+	pipeline->cmd_count = count_command(cmd_list);
+	pipeline->env = env;
+	pipeline->last_status = 0;
+	pipeline->pids = malloc(sizeof(pid_t) * pipeline->cmd_count);
+	if (!pipeline->pids)
+		exit(EXIT_FAILURE);
 }

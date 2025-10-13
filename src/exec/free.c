@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:59:16 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 16:13:09 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/13 16:49:01 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,14 @@ void	close_all_pipes(int **pipes, int count)
 		}
 		i++;
 	}
+}
+
+void	free_matrix(char **t)
+{
+	size_t	i;
+
+	i = 0;
+	while (t[i])
+		free(t[i++]);
+	free(t);
 }
