@@ -42,7 +42,7 @@ int	count_args(char **args)
 	return (i - 1);
 }
 
-void	print_error(char	**args)
+void	print_error(char **args)
 {
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(args[1], 2);
@@ -55,7 +55,6 @@ int	ft_exit(char **args, t_shell_ctx *ctx)
 
 	if (!args || !args[0])
 		return (1);
-	
 	arg_count = count_args(args);
 	if (arg_count == 0)
 	{

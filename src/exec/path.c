@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/14 18:23:58 by arpenel           #+#    #+#             */
+/*   Updated: 2025/10/15 15:48:56 by arpenel          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	get_path_env(t_commande *cmd_list, char **env)
@@ -20,23 +32,22 @@ void	get_path_env(t_commande *cmd_list, char **env)
 
 char	*create_full_path(t_commande *cmd_list, char **env)
 {
-	char *cmd_path;
-	char *full_path;
-	char *cmd;
-	int j;
+	char	*cmd_path;
+	char	*full_path;
+	char	*cmd;
+	int		j;
 
 	j = 0;
 	cmd = cmd_list->args[0];
-
 	if (!cmd_list->path)
 		get_path_env(cmd_list, env);
 	if (!cmd_list->path)
 		return (NULL);
 	while (cmd_list->path && cmd_list->path[j])
 	{
-		full_path = ft_strjoin(cmd_list->path[j], "/");
-		cmd_path = ft_strjoin(full_path, cmd);
-		//free(full_path);
+		full_path = ft_strjoin_nofree(cmd_list->path[j], "/");
+		cmd_path = ft_strjoin_nofree(full_path, cmd);
+		free(full_path);
 		if (access(cmd_path, X_OK) == 0)
 			return (cmd_path);
 		free(cmd_path);

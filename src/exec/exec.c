@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 16:59:26 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/14 18:26:53 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	int	res;
+
 	if (is_empty_cmd(cmd_list))
 		return (ctx->last_status = 0);
-
 	res = process_all_heredocs(cmd_list);
 	if (res != 0)
 		return (ctx->last_status = res);
@@ -54,9 +54,7 @@ int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 		cmd_path = create_full_path(cmd_list, ctx->env);
 		if (!cmd_path)
 		{
-			//ft_putstr_fd(SHELL_NAME, 2);
 			ft_putstr_fd(cmd_list->args[0], 2);
-			//ft_putstr_fd(cmd_list)
 			ft_putstr_fd(CMD_NOT_FOUND, 2);
 			exit(127);
 		}
@@ -78,6 +76,7 @@ int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 	else
 		return (1);
 }
+
 int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	pid_t	pid;
@@ -106,7 +105,7 @@ int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 
 int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)
 {
-	char *cmd_path;
+	char	*cmd_path;
 
 	if (cmd_list->type == CMD_SIMPLE)
 	{
@@ -123,10 +122,10 @@ int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)
 
 int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 {
-	pid_t pid;
-	t_pipeline *pipeline;
-	t_commande *curr;
-	int i;
+	pid_t		pid;
+	t_pipeline	*pipeline;
+	t_commande	*curr;
+	int			i;
 
 	i = 0;
 	curr = cmd_list;
@@ -134,10 +133,8 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	if (!pipeline)
 		return (1);
 	init_pipeline(pipeline, cmd_list, ctx->env);
-
 	if (create_pipes(pipeline) != 0)
 		return (1);
-
 	while (curr)
 	{
 		pid = fork();
@@ -161,6 +158,3 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	free_pipeline_resources(pipeline);
 	return (ctx->last_status);
 }
-
-
-

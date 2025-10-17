@@ -209,6 +209,7 @@ int	can_exec(char *path, t_shell_ctx *ctx);
 void	free_pipes(int **pipes, int count);
 void	free_pipeline_resources(t_pipeline *pipeline);
 void	close_all_pipes(int **pipes, int count);
+void	free_matrix(char **t);
 
 // here_doc.c
 int	is_it_delimiter(char *line, char *delimiter);

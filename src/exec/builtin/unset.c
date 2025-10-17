@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 16:30:54 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 14:35:40 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/14 18:22:01 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,13 @@ static int	unset_one_arg(t_shell_ctx *ctx, const char *name)
 int	ft_unset(char **args, t_shell_ctx *ctx)
 {
 	int	i;
-	// int	status;
 
 	i = 1;
-	// status = 0;
 	if (!args || !args[1])
 		return (0);
 	while (args[i])
 	{
 		if (is_valid_identifier(args[i]))
-		// {
-		// 	ft_putstr_fd("minishell: unset: '", 2);
-		// 	ft_putstr_fd(args[i], 2);
-		// 	ft_putstr_fd("': not a valid identifier\n", 2);
-		//  }
-		// else
 			unset_one_arg(ctx, args[i]);
 		i++;
 	}

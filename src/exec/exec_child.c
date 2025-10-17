@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:42 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/13 16:59:45 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/14 18:24:57 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,14 @@ void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
 		exec_command_direct(cmd_list, ctx);
 }
 
-int close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx)
+int	close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx)
 {
-	int i;
-	int status;
-	int last_status;
+	int	i;
+	int	status;
+	int	last_status;
 
 	if (!pipeline || !pipeline->pids)
 		return (1);
-
 	last_status = 0;
 	i = 0;
 	while (i < pipeline->cmd_count)

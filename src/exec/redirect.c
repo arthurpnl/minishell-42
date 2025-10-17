@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 14:14:11 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/14 18:32:49 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	handle_append_redirect(t_redirection *redir)
 
 int	handle_pipe_redirect(int **pipes, int i, int cmd_count)
 {
-	int j;
+	int	j;
 
 	if (i == 0)
 		dup2(pipes[0][1], STDOUT_FILENO);
@@ -118,7 +118,6 @@ int	handle_pipe_redirect(int **pipes, int i, int cmd_count)
 	}
 	else if (i == cmd_count - 1 && cmd_count > 1)
 		dup2(pipes[i - 1][0], STDIN_FILENO);
-
 	j = 0;
 	while (j < cmd_count - 1)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 16:00:41 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/06 18:10:32 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/14 18:23:01 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	find_var_index(t_shell_ctx *ctx, char *name, char *value)
 	{
 		if (ft_strncmp(ctx->env[i], name, name_len) == 0)
 		{
-			if(ctx->env[i][name_len] == '=' || ctx->env[i][name_len] == '\0')
+			if (ctx->env[i][name_len] == '=' || ctx->env[i][name_len] == '\0')
 				return (i);
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:59:16 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 16:49:01 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/14 18:30:14 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	free_pipeline_resources(t_pipeline *pipeline)
 	if (!pipeline)
 		return ;
 	if (pipeline->pipes)
-		free_pipes(pipeline->pipes, pipeline->cmd_count);  // ← Utilise free_pipes()
+		free_pipes(pipeline->pipes, pipeline->cmd_count);
 	if (pipeline->pids)
 		free(pipeline->pids);
 	free(pipeline);
@@ -41,7 +41,7 @@ void	free_pipeline_resources(t_pipeline *pipeline)
 
 void	close_all_pipes(int **pipes, int count)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!pipes)
