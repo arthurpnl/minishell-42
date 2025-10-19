@@ -6,18 +6,26 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/14 18:32:49 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/19 17:09:43 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	apply_heredoc_redirect(t_redirection *redir)
+{
+	if (redir->fd == -1)
+		return (-1);
+	dup2(redir->fd, STDIN_FILENO);
+	close(redir->fd);
+	return (0);
+}
 
 int	dispatch_redirect(t_commande *cmd_list)
 {
 	t_redirection	*current;
 	int				res;
 
-	res = -1;
 	current = cmd_list->redirection;
 	while (current != NULL)
 	{
@@ -28,16 +36,7 @@ int	dispatch_redirect(t_commande *cmd_list)
 		else if (current->type == TOK_REDIR_APPEND)
 			res = handle_append_redirect(current);
 		else if (current->type == TOK_HEREDOC)
-		{
-			if (current->fd != -1)
-			{
-				dup2(current->fd, STDIN_FILENO);
-				close(current->fd);
-				res = 0;
-			}
-			else
-				res = -1;
-		}
+			res = apply_heredoc_redirect(current);
 		if (res != 0)
 			return (res);
 		current = current->next;
@@ -102,28 +101,5 @@ int	handle_append_redirect(t_redirection *redir)
 		return (-1);
 	}
 	close(fd);
-	return (0);
-}
-
-int	handle_pipe_redirect(int **pipes, int i, int cmd_count)
-{
-	int	j;
-
-	if (i == 0)
-		dup2(pipes[0][1], STDOUT_FILENO);
-	else if (i > 0 && i < cmd_count - 1)
-	{
-		dup2(pipes[i - 1][0], STDIN_FILENO);
-		dup2(pipes[i][1], STDOUT_FILENO);
-	}
-	else if (i == cmd_count - 1 && cmd_count > 1)
-		dup2(pipes[i - 1][0], STDIN_FILENO);
-	j = 0;
-	while (j < cmd_count - 1)
-	{
-		close(pipes[j][0]);
-		close(pipes[j][1]);
-		j++;
-	}
 	return (0);
 }

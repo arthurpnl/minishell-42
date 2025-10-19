@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:42 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/14 18:24:57 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/19 17:16:41 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
 	if (dispatch_redirect(cmd_list) != 0)
 		exit(EXIT_FAILURE);
 	if (cmd_list->type == CMD_BUILTIN)
-		exit(exec_builtin(cmd_list, ctx));
+		exit(exec_builtin(cmd_list, ctx, NULL));
 	else
 		exec_command_direct(cmd_list, ctx);
 }

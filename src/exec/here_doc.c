@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 15:47:50 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/14 18:26:17 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/19 17:10:09 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,10 @@ int	is_it_delimiter(char *line, char *delimiter)
 	return (0);
 }
 
-int	handle_heredoc_redirect(t_redirection *redir)
+static int	write_heredoc_lines(int fd, t_redirection *redir)
 {
-	int		fd_tmp;
-	int		fd_read;
 	char	*line;
-	char	*file_name;
 
-	file_name = ft_strdup("/tmp/.minishell_heredoc_tmp");
-	if (!file_name)
-		return (-1);
-	fd_tmp = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if (fd_tmp < 0)
-		return (free(file_name), -1);
 	while (1)
 	{
 		line = readline("heredoc>");
@@ -49,10 +40,26 @@ int	handle_heredoc_redirect(t_redirection *redir)
 				free(line);
 			break ;
 		}
-		write(fd_tmp, line, ft_strlen(line));
-		write(fd_tmp, "\n", 1);
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 	}
+	return (0);
+}
+
+int	handle_heredoc_redirect(t_redirection *redir)
+{
+	int		fd_tmp;
+	int		fd_read;
+	char	*file_name;
+
+	file_name = ft_strdup("/tmp/.minishell_heredoc_tmp");
+	if (!file_name)
+		return (-1);
+	fd_tmp = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (fd_tmp < 0)
+		return (free(file_name), -1);
+	write_heredoc_lines(fd_tmp, redir);
 	close(fd_tmp);
 	fd_read = open(file_name, O_RDONLY);
 	unlink(file_name);
