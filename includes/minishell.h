@@ -190,7 +190,7 @@ int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
 void exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx, int i);
 int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx);
 int	exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
-int	exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx); // tmp
+int	exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx);
 int exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx);
 int close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx);
 
@@ -210,6 +210,10 @@ void	free_pipes(int **pipes, int count);
 void	free_pipeline_resources(t_pipeline *pipeline);
 void	close_all_pipes(int **pipes, int count);
 void	free_matrix(char **t);
+
+// cleanup.c
+void	cleanup_all(t_shell_ctx *ctx, t_commande *cmd_list);
+void	cleanup_and_exit(t_shell_ctx *ctx, t_commande *cmd_list, int exit_code);
 
 // here_doc.c
 int	is_it_delimiter(char *line, char *delimiter);
@@ -235,7 +239,7 @@ int    handle_pipe_redirect(int **pipes, int i, int cmd_count);
 int	ft_cd(char **args, t_shell_ctx *ctx);
 int	ft_echo(char **args);
 int	ft_env(char **env);
-int	ft_exit(char **args, t_shell_ctx *ctx);
+int	ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list);
 int	ft_export(char **args, t_shell_ctx *ctx);
 int	ft_pwd(void);
 int	ft_unset(char **args, t_shell_ctx *ctx);

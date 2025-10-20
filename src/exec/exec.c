@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/19 17:20:59 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/20 12:45:10 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx, t_token *tokens)
+int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	int	res;
 
@@ -25,7 +25,7 @@ int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx, t_token *tokens)
 	if (!cmd_list->next)
 	{
 		if (cmd_list->type == CMD_BUILTIN)
-			ctx->last_status = exec_builtin(cmd_list, ctx, tokens);
+			ctx->last_status = exec_builtin(cmd_list, ctx);
 		else if (cmd_list->type == CMD_SIMPLE)
 			ctx->last_status = exec_single_cmd(cmd_list, ctx);
 		else if (cmd_list->type == CMD_ABSOLUTE

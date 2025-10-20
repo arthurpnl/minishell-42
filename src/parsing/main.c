@@ -81,9 +81,9 @@ static void	process_input(char *input, t_shell_ctx *ctx)
 
 	// ici tu lanceras l’exécution des tokens
 	// et tu mettras à jour ctx->last_status en fonction du résultat
-	ctx->last_status = command_dispatch(cmds, ctx);
 	free(str);
 	free_tokens(head);
+	ctx->last_status = command_dispatch(cmds, ctx);
 	free_commande(cmds);
 }
 

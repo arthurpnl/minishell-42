@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 19:57:40 by mehdi             #+#    #+#             */
-/*   Updated: 2025/10/08 09:34:27 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/20 13:07:43 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@ int	is_valid_var_char(char c)
 
 char	*expand_status(char *res, int status, int *i)
 {
-	char	buf[12];
+	char	*buf;
+	char	*joined;
 
-	sprintf(buf, "%d", status);
+	buf = ft_itoa(status);
 	*i += 2;
-	return (ft_strjoin(res, buf));
+	joined = ft_strjoin(res, buf);
+	free(buf);
+	return (joined);
 }

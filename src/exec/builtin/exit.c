@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:42:11 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/19 17:02:18 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/20 12:59:57 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,14 @@ void	print_error(char **args)
 	ft_putstr_fd(": numeric argument required\n", 2);
 }
 
-static void	handle_exit(t_shell_ctx *ctx, t_commande *cmd_list, t_token *tokens,
-		int code)
+static void	handle_exit(t_shell_ctx *ctx, t_commande *cmd_list, int code)
 {
-	if (tokens)
-		cleanup_and_exit(ctx, cmd_list, tokens, code);
-	else
+	cleanup_and_exit(ctx, cmd_list, code);
+	
 		exit(code);
 }
 
-int	ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list,
-		t_token *tokens)
+int	ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list)
 {
 	int	arg_count;
 	int	exit_code;
@@ -69,16 +66,16 @@ int	ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list,
 	arg_count = count_args(args);
 	printf("exit\n");
 	if (arg_count == 0)
-		handle_exit(ctx, cmd_list, tokens, 0);
+		handle_exit(ctx, cmd_list, 0);
 	if (arg_count == 1)
 	{
 		if (is_valid_number(args[1]))
 		{
 			exit_code = ft_atoi(args[1]) % 256;
-			handle_exit(ctx, cmd_list, tokens, exit_code);
+			handle_exit(ctx, cmd_list, exit_code);
 		}
 		print_error(args);
-		handle_exit(ctx, cmd_list, tokens, 2);
+		handle_exit(ctx, cmd_list, 2);
 	}
 	ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 	return (1);
