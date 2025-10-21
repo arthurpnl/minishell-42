@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 00:00:00 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/20 12:57:50 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/21 17:08:27 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,14 @@ static void	exec_single_child(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	char	*cmd_path;
 
+	if (dispatch_redirect(cmd_list) != 0)
+		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 	cmd_path = create_full_path(cmd_list, ctx->env);
 	if (!cmd_path)
 	{
 		ft_putstr_fd(cmd_list->args[0], 2);
 		ft_putstr_fd(CMD_NOT_FOUND, 2);
 		cleanup_and_exit(ctx, cmd_list, 127);
-	}
-	if (dispatch_redirect(cmd_list) != 0)
-	{
-		free(cmd_path);
-		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 	}
 	execve(cmd_path, cmd_list->args, ctx->env);
 	perror(cmd_list->args[0]);
@@ -63,7 +60,7 @@ static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
 	{
 		perror("fork");
 		free_pipeline_resources(pipeline);
-		exit(EXIT_FAILURE);
+		return (-1);
 	}
 	if (pid == 0)
 	{

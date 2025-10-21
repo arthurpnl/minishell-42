@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 17:04:56 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/20 13:19:45 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/21 17:33:13 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@ void    cleanup_all(t_shell_ctx *ctx, t_commande *cmd_list)
 		if (ctx->env)
 		{
 			free_envp(ctx->env);
-			ctx->env = NULL;
-		}
-		if (ctx->env)
-		{
-			free_matrix(ctx->env);
 			ctx->env = NULL;
 		}
 	}

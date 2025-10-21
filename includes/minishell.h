@@ -68,7 +68,7 @@ typedef struct s_redirection
 {
 	t_token_type			type;
 	char					*file;
-	int						fd;
+	int						fd;	
 	struct s_redirection	*next;
 }	t_redirection;
 

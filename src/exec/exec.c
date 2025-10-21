@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/20 12:45:10 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/21 17:29:21 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 	if (pid == 0)
 	{
 		if (dispatch_redirect(cmd_list) != 0)
-			exit(EXIT_FAILURE);
+			cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 		execve(cmd_list->args[0], cmd_list->args, ctx->env);
 		perror(cmd_list->args[0]);
-		exit(126);
+		cleanup_and_exit(ctx, cmd_list, 126);
 	}
 	else if (pid > 0)
 	{
@@ -73,11 +73,12 @@ int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)
 	{
 		cmd_path = create_full_path(cmd_list, ctx->env);
 		if (!cmd_path)
-			exit(127);
+			cleanup_and_exit(ctx, cmd_list, 127);
 		execve(cmd_path, cmd_list->args, ctx->env);
 		free(cmd_path);
 	}
 	else if (cmd_list->type == CMD_ABSOLUTE || cmd_list->type == CMD_RELATIVE)
 		execve(cmd_list->args[0], cmd_list->args, ctx->env);
-	exit(127);
+	cleanup_and_exit(ctx, cmd_list, 127);
+	return(127);
 }

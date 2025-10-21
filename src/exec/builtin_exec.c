@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:17 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/21 15:09:33 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/21 17:41:15 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx)
 	if (pid == 0)
 	{
 		if (dispatch_redirect(cmd_list) != 0)
-			exit(EXIT_FAILURE);
-		exit(exec_builtin_cmd(cmd_list, ctx));
+			cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
+		cleanup_and_exit(ctx, cmd_list, exec_builtin_cmd(cmd_list, ctx));
 	}
 	else if (pid > 0)
 	{
