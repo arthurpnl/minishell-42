@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:19:22 by arthur            #+#    #+#             */
-/*   Updated: 2025/08/27 17:41:23 by arthur           ###   ########.fr       */
+/*   Updated: 2025/10/21 15:02:51 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_n_flag(char *str)
+{
+	int	i;
+
+	if (!str || str[0] != '-' || str[1] != 'n')
+		return (0);
+	i = 1;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	ft_echo(char **args)
 {
@@ -21,10 +37,10 @@ int	ft_echo(char **args)
 	i = 1;
 	if (!args)
 		return (1);
-	if (args[1] && ft_strcmp(args[1], "-n") == 0)
+	while (args[i] && is_n_flag(args[i]))
 	{
 		new_line = 0;
-		i = 2;
+		i++;
 	}
 	while (args[i])
 	{

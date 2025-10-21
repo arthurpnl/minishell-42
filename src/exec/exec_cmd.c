@@ -21,17 +21,17 @@ static void	exec_single_child(t_commande *cmd_list, t_shell_ctx *ctx)
 	{
 		ft_putstr_fd(cmd_list->args[0], 2);
 		ft_putstr_fd(CMD_NOT_FOUND, 2);
-		exit(127);
+		cleanup_and_exit(ctx, cmd_list, 127);
 	}
 	if (dispatch_redirect(cmd_list) != 0)
 	{
 		free(cmd_path);
-		exit(EXIT_FAILURE);
+		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 	}
 	execve(cmd_path, cmd_list->args, ctx->env);
 	perror(cmd_list->args[0]);
 	free(cmd_path);
-	exit(EXIT_FAILURE);
+	cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 }
 
 int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
@@ -68,7 +68,8 @@ static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
 	if (pid == 0)
 	{
 		exec_child(curr, pipeline, ctx, i);
-		exit(EXIT_FAILURE);
+		free_pipeline_resources(pipeline);
+		cleanup_and_exit(ctx, curr, EXIT_FAILURE);
 	}
 	return (pid);
 }

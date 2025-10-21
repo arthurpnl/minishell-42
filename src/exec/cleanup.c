@@ -12,17 +12,25 @@
 
 #include "minishell.h"
 
-void	cleanup_all(t_shell_ctx *ctx, t_commande *cmd_list)
+void    cleanup_all(t_shell_ctx *ctx, t_commande *cmd_list)
 {
 	if (cmd_list)
 	{
 		free_commande(cmd_list);
 		cmd_list = NULL;
 	}
-	if (ctx && ctx->env)
+	if (ctx)
 	{
-		free_envp(ctx->env);
-		ctx->env = NULL;
+		if (ctx->env)
+		{
+			free_envp(ctx->env);
+			ctx->env = NULL;
+		}
+		if (ctx->env)
+		{
+			free_matrix(ctx->env);
+			ctx->env = NULL;
+		}
 	}
 }
 

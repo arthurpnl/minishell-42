@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:17 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/20 12:58:52 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/21 15:09:33 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 	else if (ft_strcmp(cmd_list->args[0], "unset") == 0)
 		ctx->last_status = ft_unset(cmd_list->args, ctx);
 	else if (ft_strcmp(cmd_list->args[0], "env") == 0)
-		ctx->last_status = ft_env(ctx->env);
+		ctx->last_status = ft_env(cmd_list->args, ctx->env);
 	else if (ft_strcmp(cmd_list->args[0], "exit") == 0)
 		ctx->last_status = ft_exit(cmd_list->args, ctx, cmd_list);
 	else

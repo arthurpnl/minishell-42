@@ -18,9 +18,15 @@ void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
 	if (pipeline->cmd_count > 1)
 		handle_pipe_redirect(pipeline->pipes, i, pipeline->cmd_count);
 	if (dispatch_redirect(cmd_list) != 0)
-		exit(EXIT_FAILURE);
+	{
+		free_pipeline_resources(pipeline);
+		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
+	}
 	if (cmd_list->type == CMD_BUILTIN)
-		exit(exec_builtin(cmd_list, ctx));
+	{
+		free_pipeline_resources(pipeline);
+		cleanup_and_exit(ctx, cmd_list, exec_builtin(cmd_list, ctx));
+	}
 	else
 		exec_command_direct(cmd_list, ctx);
 }

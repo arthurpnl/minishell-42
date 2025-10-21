@@ -48,6 +48,8 @@ void	free_commande(t_commande *cmd)
 		cmd = cmd->next;
 		free_args(tmp->args);
 		free_redirection(tmp->redirection);
+		if (tmp->path)
+			free_split(tmp->path);
 		free(tmp);
 	}
 }
