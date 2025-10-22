@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/21 17:29:21 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/22 17:35:01 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,27 +42,29 @@ int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	pid_t	pid;
+	int		status;
 
+	status = 0;
 	if (!cmd_list || !cmd_list->args || !cmd_list->args[0])
 		return (1);
 	ctx->last_status = can_exec(cmd_list->args[0], ctx);
 	if (ctx->last_status != 0)
 		return (ctx->last_status);
+	setup_signals(2);
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (dispatch_redirect(cmd_list) != 0)
 			cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 		execve(cmd_list->args[0], cmd_list->args, ctx->env);
 		perror(cmd_list->args[0]);
 		cleanup_and_exit(ctx, cmd_list, 126);
 	}
-	else if (pid > 0)
-	{
-		waitpid(pid, &ctx->last_status, 0);
-		return (ctx->last_status >> 8);
-	}
-	return (1);
+	waitpid(pid, &ctx->last_status, 0);
+	setup_signals(0);
+	return(ctx->last_status = analyze_child_status(status));
 }
 
 int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)

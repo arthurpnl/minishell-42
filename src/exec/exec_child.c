@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:42 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/20 13:19:44 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/22 17:32:57 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
 		int i)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (pipeline->cmd_count > 1)
 		handle_pipe_redirect(pipeline->pipes, i, pipeline->cmd_count);
 	if (dispatch_redirect(cmd_list) != 0)
@@ -45,13 +47,12 @@ int	close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx)
 	{
 		if (waitpid(pipeline->pids[i], &status, 0) > 0)
 		{
-			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				last_status = 128 + WTERMSIG(status);
+			if (i == pipeline->cmd_count - 1)
+				last_status = analyze_child_status(status);
 		}
 		i++;
 	}
+	setup_signals(0);
 	ctx->last_status = last_status;
 	return (last_status);
 }

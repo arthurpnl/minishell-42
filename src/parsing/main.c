@@ -12,13 +12,48 @@
 
 #include "minishell.h"
 
+volatile sig_atomic_t	g_signal = 0;
+
 void	sig_handler(int sig)
 {
-	(void)sig;
-	rl_replace_line("", 0);
-	rl_on_new_line();
+	g_signal = sig;
 	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
+}
+
+void	sig_handler_heredoc(int sig)
+{
+	g_signal = sig;
+	write(1, "\n", 1);
+}
+
+void	setup_signals(int mode)
+{
+	struct sigaction	sa;
+	
+	sigemptyset(&sa.sa_mask);
+	
+	if (mode == 0)  // Mode PROMPT
+	{
+		sa.sa_handler = sig_handler;
+		sa.sa_flags = SA_RESTART;  // ← AVEC restart
+		sigaction(SIGINT, &sa, NULL);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == 1)  // Mode HEREDOC
+	{
+		sa.sa_handler = sig_handler_heredoc;
+		sa.sa_flags = 0;  // ← SANS restart → readline s'interrompt !
+		sigaction(SIGINT, &sa, NULL);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == 2)  // Mode EXEC (ignore)
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+	}
 }
 
 static int	exit_shell(t_shell_ctx *ctx)
@@ -73,14 +108,6 @@ static void	process_input(char *input, t_shell_ctx *ctx)
 		ctx->last_status = 0;
 		return ;
 	}
-
-	// debug : afficher les tokens
-	//printf("%s\n", str);
-	//print_commande(cmds);
-	//print_tokens(head);
-
-	// ici tu lanceras l’exécution des tokens
-	// et tu mettras à jour ctx->last_status en fonction du résultat
 	free(str);
 	free_tokens(head);
 	ctx->last_status = command_dispatch(cmds, ctx);
@@ -103,11 +130,21 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	}
 	ctx.last_status = 0;
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, SIG_IGN);
+	setup_signals(0);
 	while (1)
 	{
 		input = readline(COLOR_RED "minishell$ " COLOR_RESET);
+		if (g_signal == SIGINT)
+		{
+			ctx.last_status = 130;
+			g_signal = 0;  // Reset
+			if (input)
+			{
+				free(input);
+				input = NULL;
+			}
+			continue;  // Retour au prompt
+		}
 		if (!input)
 			return (exit_shell(&ctx)); // libère ctx.env et sort proprement
 		if (*input)

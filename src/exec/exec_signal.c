@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   exec_signal.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/19 17:04:56 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/21 17:33:13 by arpenel          ###   ########.fr       */
+/*   Created: 2025/10/22 15:55:32 by arpenel           #+#    #+#             */
+/*   Updated: 2025/10/22 16:47:36 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cleanup_all(t_shell_ctx *ctx, t_commande *cmd_list)
+int	analyze_child_status(int status)
 {
-	if (cmd_list)
-	{
-		free_commande(cmd_list);
-		cmd_list = NULL;
-	}
-	if (ctx)
-	{
-		if (ctx->env)
-		{
-			free_envp(ctx->env);
-			ctx->env = NULL;
-		}
-	}
-}
+	int sig;
 
-void	cleanup_and_exit(t_shell_ctx *ctx, t_commande *cmd_list, int exit_code)
-{
-	cleanup_all(ctx, cmd_list);
-	exit(exit_code);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+	{
+		sig = WTERMSIG(status);
+		if (sig == SIGINT)
+			return (130);
+		if (sig == SIGQUIT)
+		{
+			ft_putstr_fd("Quit (core dumped)\n", 2);
+			return (131);
+		}
+		return (128 + sig);
+	}
+	return (1);
 }

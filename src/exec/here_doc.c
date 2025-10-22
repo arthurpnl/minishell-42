@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 15:47:50 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/21 18:40:59 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/22 17:57:07 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,22 @@ static int	write_heredoc_lines(int fd, t_redirection *redir)
 
 	while (1)
 	{
-		line = readline("heredoc>");
-		if (!line || is_it_delimiter(line, redir->file))
+		write(1, "heredoc> ", 9);
+		line = get_next_line(0);
+		
+		if (g_signal == SIGINT)
 		{
+			g_signal = 0;
 			if (line)
 				free(line);
-			break ;
+			return (-1);
+		}
+		if (is_it_delimiter(line, redir->file))
+		{
+			free(line);
+			break;
 		}
 		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
 		free(line);
 	}
 	return (0);
@@ -52,15 +59,24 @@ int	handle_heredoc_redirect(t_redirection *redir)
 	int		fd_tmp;
 	int		fd_read;
 	char	*file_name;
-
+	int		res;
+	
 	file_name = ft_strdup("/tmp/.minishell_heredoc_tmp");
 	if (!file_name)
 		return (-1);
 	fd_tmp = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd_tmp < 0)
 		return (free(file_name), -1);
-	write_heredoc_lines(fd_tmp, redir);
+	setup_signals(1);
+	res = write_heredoc_lines(fd_tmp, redir);
 	close(fd_tmp);
+	setup_signals(0);
+	if (res == -1)
+	{
+		unlink(file_name);
+		free(file_name);
+		return (-1);
+	}
 	fd_read = open(file_name, O_RDONLY);
 	unlink(file_name);
 	free(file_name);
@@ -85,8 +101,8 @@ int	process_all_heredocs(t_commande *cmd_list)
 			if (redir->type == TOK_HEREDOC)
 			{
 				res = handle_heredoc_redirect(redir);
-				if (res != 0)
-					return (res);
+				if (res == -1)
+					return (130);
 			}
 			redir = redir->next;
 		}

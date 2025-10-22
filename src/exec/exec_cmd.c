@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 00:00:00 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/21 17:08:27 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/22 17:32:26 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,28 @@ static void	exec_single_child(t_commande *cmd_list, t_shell_ctx *ctx)
 int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	pid_t	pid;
+	int		status;
 
+	status = 0;
 	if (!cmd_list || !cmd_list->args)
 		return (ctx->last_status = 1);
 	if (!cmd_list->args[0] || cmd_list->args[0][0] == '\0')
 		return (ctx->last_status = 0);
+	setup_signals(2);
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		exec_single_child(cmd_list, ctx);
+	}
 	else if (pid > 0)
 	{
-		waitpid(pid, &ctx->last_status, 0);
-		return (ctx->last_status >> 8);
+		waitpid(pid, &status, 0);
+		setup_signals(0);
+		ctx->last_status = analyze_child_status(status);
 	}
-	return (1);
+	return (ctx->last_status);
 }
 
 static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
@@ -83,6 +91,7 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	init_pipeline(pipeline, cmd_list, ctx->env);
 	if (create_pipes(pipeline) != 0)
 		return (1);
+	setup_signals(2);
 	i = 0;
 	curr = cmd_list;
 	while (curr)
@@ -93,6 +102,7 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	}
 	close_all_pipes(pipeline->pipes, pipeline->cmd_count);
 	ctx->last_status = close_and_wait(pipeline, ctx);
+	setup_signals(0);
 	free_pipeline_resources(pipeline);
 	return (ctx->last_status);
 }

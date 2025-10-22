@@ -52,8 +52,7 @@ void	print_error(char **args)
 static void	handle_exit(t_shell_ctx *ctx, t_commande *cmd_list, int code)
 {
 	cleanup_and_exit(ctx, cmd_list, code);
-	
-		exit(code);
+	exit(code);
 }
 
 int	ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list)

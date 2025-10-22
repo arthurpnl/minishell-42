@@ -30,8 +30,8 @@ static int	is_n_flag(char *str)
 
 int	ft_echo(char **args)
 {
-	int	i;
-	int	new_line;
+	int i;
+	int new_line;
 
 	new_line = 1;
 	i = 1;
