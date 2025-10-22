@@ -1,0 +1,26 @@
+nano .gitignore
+```
+
+**Contenu :**
+```
+# Binaires
+minishell
+*.o
+*.a
+
+# Dossiers de build
+obj/
+
+# IDE
+.vscode/
+.idea/
+
+# Fichiers temporaires
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Valgrind
+*.supp
+readline.supp
