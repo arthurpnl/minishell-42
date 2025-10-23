@@ -38,14 +38,14 @@ void	setup_signals(int mode)
 	if (mode == 0)  // Mode PROMPT
 	{
 		sa.sa_handler = sig_handler;
-		sa.sa_flags = SA_RESTART;  // ← AVEC restart
+		sa.sa_flags = SA_RESTART;
 		sigaction(SIGINT, &sa, NULL);
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (mode == 1)  // Mode HEREDOC
 	{
 		sa.sa_handler = sig_handler_heredoc;
-		sa.sa_flags = 0;  // ← SANS restart → readline s'interrompt !
+		sa.sa_flags = 0;
 		sigaction(SIGINT, &sa, NULL);
 		signal(SIGQUIT, SIG_IGN);
 	}
