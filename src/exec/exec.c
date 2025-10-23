@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/22 17:35:01 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/23 12:54:17 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 		perror(cmd_list->args[0]);
 		cleanup_and_exit(ctx, cmd_list, 126);
 	}
-	waitpid(pid, &ctx->last_status, 0);
+	waitpid(pid, &status, 0);
 	setup_signals(0);
-	return(ctx->last_status = analyze_child_status(status));
+	return (ctx->last_status = analyze_child_status(status));
 }
 
 int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)
@@ -82,5 +82,5 @@ int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)
 	else if (cmd_list->type == CMD_ABSOLUTE || cmd_list->type == CMD_RELATIVE)
 		execve(cmd_list->args[0], cmd_list->args, ctx->env);
 	cleanup_and_exit(ctx, cmd_list, 127);
-	return(127);
+	return (127);
 }
