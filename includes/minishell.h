@@ -100,10 +100,11 @@ typedef struct s_shell_ctx
 	char	**env;
 }	t_shell_ctx;
 
-// main.c
+// exec_sig.c
 void			sig_handler(int sig);
 void			setup_signals(int mode);
 void			sig_handler_heredoc(int sig);
+int				handle_signal_interrupt(char **input, t_shell_ctx *ctx);
 
 // token.c
 void			add_back_word(t_token_word **token, t_token_word *new);
@@ -168,6 +169,7 @@ void			free_args(char **args);
 void			free_commande(t_commande *cmd);
 void			free_redirection(t_redirection *redir);
 void			free_split(char **split);
+int				exit_shell(t_shell_ctx *ctx);
 
 // utils.c
 char			*ft_strjoin(char *s1, char const *s2);
@@ -246,7 +248,7 @@ int				add_o_update_env(t_shell_ctx *ctx, char *name, char *value);
 int				update_var_env(t_shell_ctx *ctx,
 					int i, char *name, char *value);
 int				add_new_env(t_shell_ctx *ctx, char *name, char *value);
-int				find_var_index(t_shell_ctx *ctx, char *name, char *value);
+int				find_var_index(t_shell_ctx *ctx, char *name);
 int				process_single_arg(char *arg, t_shell_ctx *ctx);
 void			free_old_env(char **env);
 
@@ -268,6 +270,6 @@ int				count_args(char **args);
 char			**clean_args(char **args);
 
 // exec_sginals.c
-int	analyze_child_status(int status);
+int				analyze_child_status(int status);
 
 #endif

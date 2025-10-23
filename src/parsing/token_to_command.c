@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_to_command.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 08:38:58 by mehdi             #+#    #+#             */
-/*   Updated: 2025/10/08 09:35:23 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/23 16:11:55 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	handle_redir(t_commande *curr, t_token **tokens)
 	return (1);
 }
 
-static int	handle_token(t_token **tokens, t_commande **curr, t_commande **head)
+static int	handle_token(t_token **tokens, t_commande **curr)
 {
 	if ((*tokens)->type == TOK_WORD)
 		(*curr)->args = append_arg((*curr)->args, (*tokens)->word);
@@ -109,7 +109,7 @@ t_commande	*tokens_to_command(t_token *tokens)
 			if (!curr)
 				return (NULL);
 		}
-		if (!handle_token(&tokens, &curr, &head))
+		if (!handle_token(&tokens, &curr))
 			return (NULL);
 		tokens = tokens->next;
 	}

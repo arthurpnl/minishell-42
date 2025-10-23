@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 15:47:50 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/22 17:57:07 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/23 14:21:12 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	write_heredoc_lines(int fd, t_redirection *redir)
 	{
 		write(1, "heredoc> ", 9);
 		line = get_next_line(0);
-		
 		if (g_signal == SIGINT)
 		{
 			g_signal = 0;
@@ -46,7 +45,8 @@ static int	write_heredoc_lines(int fd, t_redirection *redir)
 		if (is_it_delimiter(line, redir->file))
 		{
 			free(line);
-			break;
+			get_next_line(-1);
+			break ;
 		}
 		write(fd, line, ft_strlen(line));
 		free(line);
@@ -54,32 +54,43 @@ static int	write_heredoc_lines(int fd, t_redirection *redir)
 	return (0);
 }
 
+static int	open_heredoc_tmp(char **file_name)
+{
+	int	fd;
+
+	*file_name = ft_strdup("/tmp/.minishell_heredoc_tmp");
+	if (!*file_name)
+		return (-1);
+	fd = open(*file_name, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (fd < 0)
+	{
+		free(*file_name);
+		return (-1);
+	}
+	return (fd);
+}
+
 int	handle_heredoc_redirect(t_redirection *redir)
 {
+	char	*file_name;
 	int		fd_tmp;
 	int		fd_read;
-	char	*file_name;
 	int		res;
-	
-	file_name = ft_strdup("/tmp/.minishell_heredoc_tmp");
-	if (!file_name)
-		return (-1);
-	fd_tmp = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+	fd_tmp = open_heredoc_tmp(&file_name);
 	if (fd_tmp < 0)
-		return (free(file_name), -1);
+		return (-1);
 	setup_signals(1);
 	res = write_heredoc_lines(fd_tmp, redir);
 	close(fd_tmp);
 	setup_signals(0);
 	if (res == -1)
-	{
-		unlink(file_name);
-		free(file_name);
-		return (-1);
-	}
+		return (unlink(file_name), free(file_name), -1);
 	fd_read = open(file_name, O_RDONLY);
 	unlink(file_name);
 	free(file_name);
+	if (fd_read < 0)
+		return (-1);
 	if (redir->fd != -1)
 		close(redir->fd);
 	redir->fd = fd_read;

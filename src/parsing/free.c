@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 19:15:51 by mehdi             #+#    #+#             */
-/*   Updated: 2025/09/24 19:18:39 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/23 14:51:15 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ void	free_redirection(t_redirection *redir)
 	{
 		tmp = redir;
 		redir = redir->next;
+		if (tmp->fd != -1)
+		{
+			close(tmp->fd);
+			tmp->fd = -1;
+		}
 		if (tmp->file)
 			free(tmp->file);
 		free(tmp);
@@ -64,4 +69,12 @@ void	free_split(char **split)
 	while (split[i])
 		free(split[i++]);
 	free(split);
+}
+
+int	exit_shell(t_shell_ctx *ctx)
+{
+	printf("exit\n");
+	free_envp(ctx->env);
+	clear_history();
+	exit(ctx->last_status);
 }

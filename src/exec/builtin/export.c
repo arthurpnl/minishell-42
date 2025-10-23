@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 16:00:41 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/14 18:23:01 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/23 16:12:47 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	add_o_update_env(t_shell_ctx *ctx, char *name, char *value)
 {
 	int	i;
 
-	i = find_var_index(ctx, name, value);
+	i = find_var_index(ctx, name);
 	if (i == -1)
 		return (add_new_env(ctx, name, value));
 	else
@@ -90,7 +90,7 @@ int	add_new_env(t_shell_ctx *ctx, char *name, char *value)
 	return (0);
 }
 
-int	find_var_index(t_shell_ctx *ctx, char *name, char *value)
+int	find_var_index(t_shell_ctx *ctx, char *name)
 {
 	size_t	name_len;
 	int		i;

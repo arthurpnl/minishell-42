@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:19:22 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/21 15:02:51 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/23 11:51:58 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static int	is_n_flag(char *str)
 
 int	ft_echo(char **args)
 {
-	int i;
-	int new_line;
+	int	i;
+	int	new_line;
 
 	new_line = 1;
 	i = 1;

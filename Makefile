@@ -1,75 +1,108 @@
-# Nom du programme
-NAME = minishell
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/10/23 15:56:54 by arpenel           #+#    #+#              #
+#    Updated: 2025/10/23 15:56:54 by arpenel          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-# Compilateur et options
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -Wno-unused-parameter
-INCLUDES = -I includes -I Libft/includes
+NAME		= minishell
 
-# Bibliothèques
-LIBS = -lreadline -L Libft -lft
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror -g
+INCLUDES	= -I includes -I Libft/includes
+LIBS		= -lreadline -L Libft -lft
 
-# Structure des dossiers
-SRC_DIR = src
-PARSING_DIR = $(SRC_DIR)/parsing
-EXEC_DIR = $(SRC_DIR)/exec
-BUILTIN_DIR = $(EXEC_DIR)/builtin
-OBJ_DIR = obj
+SRC_DIR		= src
+PARSING_DIR	= $(SRC_DIR)/parsing
+EXEC_DIR	= $(SRC_DIR)/exec
+BUILTIN_DIR	= $(EXEC_DIR)/builtin
+OBJ_DIR		= obj
+LIBFT_DIR	= Libft
 
-# Sources
-SRCS = $(wildcard $(SRC_DIR)/*.c) \
-       $(wildcard $(PARSING_DIR)/*.c) \
-       $(wildcard $(EXEC_DIR)/*.c) \
-       $(wildcard $(BUILTIN_DIR)/*.c)
+LIBFT		= $(LIBFT_DIR)/libft.a
 
-# Objets
-OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
+PARSING_SRCS	= $(PARSING_DIR)/check_syntax_2.c \
+				  $(PARSING_DIR)/check_syntax.c \
+				  $(PARSING_DIR)/clean_space_2.c \
+				  $(PARSING_DIR)/clean_space.c \
+				  $(PARSING_DIR)/expand_2.c \
+				  $(PARSING_DIR)/expand.c \
+				  $(PARSING_DIR)/free.c \
+				  $(PARSING_DIR)/ft_split_token.c \
+				  $(PARSING_DIR)/ft_split_word.c \
+				  $(PARSING_DIR)/main.c \
+				  $(PARSING_DIR)/quote_and_env.c \
+				  $(PARSING_DIR)/token_2.c \
+				  $(PARSING_DIR)/token_to_command_2.c \
+				  $(PARSING_DIR)/token_to_command.c \
+				  $(PARSING_DIR)/token_to_command3.c \
+				  $(PARSING_DIR)/token_word.c \
+				  $(PARSING_DIR)/token.c \
+				  $(PARSING_DIR)/utils.c
 
-# Création des dossiers d'objets si nécessaire
-$(shell mkdir -p $(OBJ_DIR)/$(SRC_DIR) \
-                 $(OBJ_DIR)/$(PARSING_DIR) \
-                 $(OBJ_DIR)/$(EXEC_DIR) \
-                 $(OBJ_DIR)/$(BUILTIN_DIR))
+EXEC_SRCS		= $(EXEC_DIR)/builtin_exec.c \
+				  $(EXEC_DIR)/cleanup.c \
+				  $(EXEC_DIR)/cmd_type.c \
+				  $(EXEC_DIR)/exec_child.c \
+				  $(EXEC_DIR)/exec_cmd.c \
+				  $(EXEC_DIR)/exec_signal.c \
+				  $(EXEC_DIR)/exec_utils.c \
+				  $(EXEC_DIR)/exec.c \
+				  $(EXEC_DIR)/free.c \
+				  $(EXEC_DIR)/here_doc.c \
+				  $(EXEC_DIR)/path.c \
+				  $(EXEC_DIR)/pipeline.c \
+				  $(EXEC_DIR)/redirect_pipes.c \
+				  $(EXEC_DIR)/redirect.c \
+				  $(EXEC_DIR)/utils.c \
+				  $(EXEC_DIR)/utils2.c
+				  
+BUILTIN_SRCS	= $(BUILTIN_DIR)/cd_utils.c \
+				  $(BUILTIN_DIR)/cd.c \
+				  $(BUILTIN_DIR)/echo.c \
+				  $(BUILTIN_DIR)/env.c \
+				  $(BUILTIN_DIR)/exit.c \
+				  $(BUILTIN_DIR)/export_utils.c \
+				  $(BUILTIN_DIR)/export_utils2.c \
+				  $(BUILTIN_DIR)/export.c \
+				  $(BUILTIN_DIR)/pwd.c \
+				  $(BUILTIN_DIR)/unset.c
 
-# Règle principale
-all: libft $(NAME)
+SRCS			= $(PARSING_SRCS) $(EXEC_SRCS) $(BUILTIN_SRCS)
 
-# Compile le programme
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+OBJS			= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-# Compilation des fichiers .c en .o
-$(OBJ_DIR)/%.o: %.c includes/minishell.h
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+all: $(NAME)
 
-# Compile Libft
-libft:
-	$(MAKE) -C Libft
+$(NAME): $(LIBFT) $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@echo "\033[0;32m✓ $(NAME) compiled successfully\033[0m"
 
-# Nettoyage des objets
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo "\033[0;32m✓\033[0m Compiled: $<"
+
+$(LIBFT):
+	@echo "\033[0;32mCompiling libft...\033[0m"
+	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+	@echo "\033[0;32m✓ libft compiled\033[0m"
+
 clean:
-	rm -rf $(OBJ_DIR)
-	$(MAKE) -C Libft clean
+	@rm -rf $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
+	@echo "\033[0;31m✗ Object files removed\033[0m"
 
-# Nettoyage complet
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C Libft fclean
+	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
+	@rm -f $(NAME)
+	@echo "\033[0;31m✗ $(NAME) removed\033[0m"
 
-# Recompilation complète
 re: fclean all
 
-# Règle pratique pour exécuter
-run: all
-	./$(NAME)
-
-# Pour tester avec valgrind
-valgrind: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
-
-# Pour debugger avec gdb
-debug: all
-	gdb ./$(NAME)
-
-.PHONY: all clean fclean re run valgrind debug libft
+.PHONY: all clean fclean re
