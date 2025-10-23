@@ -1,8 +1,5 @@
-nano .gitignore
-```
-
 **Contenu :**
-```
+
 # Binaires
 minishell
 *.o
