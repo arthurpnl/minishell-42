@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/23 12:54:17 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/24 19:34:17 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 {
 	int	res;
 
-	if (is_empty_cmd(cmd_list))
-		return (ctx->last_status = 0);
 	res = process_all_heredocs(cmd_list);
 	if (res != 0)
 		return (ctx->last_status = res);
 	identify_cmd_type(cmd_list);
 	if (!cmd_list->next)
 	{
+		if (is_empty_cmd(cmd_list))
+    	{
+        	//write(2, ": command not found\n", 20);
+        	return (ctx->last_status = 0);
+    	}
 		if (cmd_list->type == CMD_BUILTIN)
-			ctx->last_status = exec_builtin(cmd_list, ctx);
+			ctx->last_status = exec_builtin(cmd_list, ctx, cmd_list);
 		else if (cmd_list->type == CMD_SIMPLE)
 			ctx->last_status = exec_single_cmd(cmd_list, ctx);
 		else if (cmd_list->type == CMD_ABSOLUTE
@@ -67,20 +70,32 @@ int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 	return (ctx->last_status = analyze_child_status(status));
 }
 
-int	exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx)
+int	exec_command_direct(t_commande *cmd_list, t_commande *full_list, t_shell_ctx *ctx)
 {
 	char	*cmd_path;
-
+	
+	if (is_empty_cmd(cmd_list))
+    {
+        print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
+        cleanup_and_exit(ctx, full_list, 127);
+    }
 	if (cmd_list->type == CMD_SIMPLE)
 	{
 		cmd_path = create_full_path(cmd_list, ctx->env);
 		if (!cmd_path)
-			cleanup_and_exit(ctx, cmd_list, 127);
+		{
+			print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
+			cleanup_and_exit(ctx, full_list, 127);
+		}
 		execve(cmd_path, cmd_list->args, ctx->env);
+		perror(cmd_list->args[0]); 
 		free(cmd_path);
 	}
 	else if (cmd_list->type == CMD_ABSOLUTE || cmd_list->type == CMD_RELATIVE)
+	{
 		execve(cmd_list->args[0], cmd_list->args, ctx->env);
-	cleanup_and_exit(ctx, cmd_list, 127);
+		perror(cmd_list->args[0]);  
+	}
+	cleanup_and_exit(ctx, full_list, 127);
 	return (127);
 }

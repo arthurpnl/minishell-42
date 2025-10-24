@@ -6,14 +6,14 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:42 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/22 17:32:57 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/24 15:02:21 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
-		int i)
+		int i, t_commande *full_list)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -22,15 +22,18 @@ void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
 	if (dispatch_redirect(cmd_list) != 0)
 	{
 		free_pipeline_resources(pipeline);
-		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
+		cleanup_and_exit(ctx, full_list, EXIT_FAILURE);
 	}
 	if (cmd_list->type == CMD_BUILTIN)
 	{
 		free_pipeline_resources(pipeline);
-		cleanup_and_exit(ctx, cmd_list, exec_builtin(cmd_list, ctx));
+		cleanup_and_exit(ctx, full_list, exec_builtin(cmd_list, ctx, full_list));
 	}
 	else
-		exec_command_direct(cmd_list, ctx);
+	{
+    	free_pipeline_resources(pipeline);
+    	exec_command_direct(cmd_list, full_list, ctx);
+	}
 }
 
 int	close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx)

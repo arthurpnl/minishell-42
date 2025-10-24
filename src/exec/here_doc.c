@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 15:47:50 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/23 14:21:12 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/24 17:26:42 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static int	write_heredoc_lines(int fd, t_redirection *redir)
 			g_signal = 0;
 			if (line)
 				free(line);
+			get_next_line(-1);
 			return (-1);
 		}
 		if (is_it_delimiter(line, redir->file))

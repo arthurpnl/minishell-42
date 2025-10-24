@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:51:55 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/14 18:28:32 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/24 19:27:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,19 @@ void	*ft_memset(void *s, int c, size_t n)
 		n--;
 	}
 	return (s);
+}
+
+void	print_cmd_error(char *cmd, char *error_msg)
+{
+	char *full_msg;
+	char *tmp;
+
+	if (cmd)
+	{
+		tmp = ft_strjoin_nofree(SHELL_NAME, cmd);
+		full_msg = ft_strjoin_nofree(tmp, error_msg);
+		free(tmp);
+	}
+	write(2, full_msg, ft_strlen(full_msg));
+	free(full_msg);
 }

@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 15:55:32 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/23 14:52:24 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/24 17:12:18 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int	analyze_child_status(int status)
 	return (1);
 }
 
-void	sig_handler(int sig)
+void sig_handler(int sig)
 {
-	g_signal = sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+    g_signal = sig;
+    write(1, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 }
 
 void	sig_handler_heredoc(int sig)
@@ -74,18 +74,20 @@ void	setup_signals(int mode)
 	}
 }
 
-int	handle_signal_interrupt(char **input, t_shell_ctx *ctx)
+int handle_signal_interrupt(char **input, t_shell_ctx *ctx)
 {
-	if (g_signal == SIGINT)
-	{
-		ctx->last_status = 130;
-		g_signal = 0;
-		if (*input)
-		{
-			free(*input);
-			*input = NULL;
-		}
-		return (1);
-	}
-	return (0);
+    if (g_signal == SIGINT)
+    {
+        ctx->last_status = 130;
+        g_signal = 0;
+        
+        if (!*input || !**input)
+        {
+            if (*input)
+                free(*input);
+            return (1);
+        }
+        return (0);
+    }
+    return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 00:00:00 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/22 17:32:26 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/24 19:31:56 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ static void	exec_single_child(t_commande *cmd_list, t_shell_ctx *ctx)
 	cmd_path = create_full_path(cmd_list, ctx->env);
 	if (!cmd_path)
 	{
-		ft_putstr_fd(cmd_list->args[0], 2);
-		ft_putstr_fd(CMD_NOT_FOUND, 2);
+		print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
 		cleanup_and_exit(ctx, cmd_list, 127);
 	}
 	execve(cmd_path, cmd_list->args, ctx->env);
@@ -59,7 +58,7 @@ int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 }
 
 static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
-				t_shell_ctx *ctx, int i)
+				t_shell_ctx *ctx, int i, t_commande *cmd_list)
 {
 	pid_t	pid;
 
@@ -72,9 +71,9 @@ static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
 	}
 	if (pid == 0)
 	{
-		exec_child(curr, pipeline, ctx, i);
+		exec_child(curr, pipeline, ctx, i, cmd_list);
 		free_pipeline_resources(pipeline);
-		cleanup_and_exit(ctx, curr, EXIT_FAILURE);
+		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 	}
 	return (pid);
 }
@@ -96,7 +95,7 @@ int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
 	curr = cmd_list;
 	while (curr)
 	{
-		pipeline->pids[i] = fork_pipeline_child(curr, pipeline, ctx, i);
+		pipeline->pids[i] = fork_pipeline_child(curr, pipeline, ctx, i, cmd_list);
 		curr = curr->next;
 		i++;
 	}

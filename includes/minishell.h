@@ -183,12 +183,12 @@ void			identify_cmd_type(t_commande *cmd_list);
 int				command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx);
 int				exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
 int				exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
-void			exec_child(t_commande *cmd_list,
-					t_pipeline *pipeline, t_shell_ctx *ctx, int i);
+void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
+		int i, t_commande *full_list);
 int				exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx);
 int				exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
-int				exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx);
-int				exec_command_direct(t_commande *cmd_list, t_shell_ctx *ctx);
+int				exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx, t_commande *full_list);
+int				exec_command_direct(t_commande *cmd_list, t_commande *full_list, t_shell_ctx *ctx);
 int				close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx);
 
 // exec_utils.c
@@ -202,6 +202,7 @@ void			init_pipeline(t_pipeline *pipeline,
 					t_commande *cmd_list, char **env);
 int				is_empty_cmd(t_commande *cmd);
 int				can_exec(char *path, t_shell_ctx *ctx);
+void	print_cmd_error(char *cmd, char *error_msg);
 
 // free.c
 void			free_pipes(int **pipes, int count);

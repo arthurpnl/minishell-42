@@ -95,11 +95,12 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	while (1)
 	{
+		g_signal = 0;  // ← Reset AVANT readline
 		input = readline(COLOR_RED "minishell$ " COLOR_RESET);
-		if (handle_signal_interrupt(&input, &ctx))
-			continue ;
 		if (!input)
 			return (exit_shell(&ctx));
+		if (handle_signal_interrupt(&input, &ctx))
+			continue ;
 		if (*input)
 			add_history(input);
 		if (unclosed_quote(input))
