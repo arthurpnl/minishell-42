@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/24 19:34:17 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/25 12:26:36 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 	{
 		if (is_empty_cmd(cmd_list))
     	{
-        	//write(2, ": command not found\n", 20);
-        	return (ctx->last_status = 0);
+        	print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
+        	return (ctx->last_status = 127);
     	}
 		if (cmd_list->type == CMD_BUILTIN)
 			ctx->last_status = exec_builtin(cmd_list, ctx, cmd_list);
