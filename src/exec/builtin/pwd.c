@@ -3,18 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 17:14:29 by arthur            #+#    #+#             */
-/*   Updated: 2025/08/27 17:27:04 by arthur           ###   ########.fr       */
+/*   Updated: 2025/10/26 11:51:02 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(char **args)
 {
 	char	*pwd_path;
+	if (args[1])
+	{
+		if (args[1][0] == '-')
+		{
+			char *tmp;
+			
+			tmp = ft_strjoin_nofree("pwd: ", args[1]);
+			print_cmd_error(tmp, ": invalid option\n");
+			free(tmp);
+			return (2);
+		}
+	}
 
 	pwd_path = getcwd(NULL, 0);
 	if (!pwd_path)

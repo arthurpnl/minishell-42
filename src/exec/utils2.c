@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:51:55 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/24 19:27:11 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/26 11:37:35 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	print_cmd_error(char *cmd, char *error_msg)
 		full_msg = ft_strjoin_nofree(tmp, error_msg);
 		free(tmp);
 	}
+	else
+		full_msg = ft_strjoin_nofree(SHELL_NAME, error_msg);
 	write(2, full_msg, ft_strlen(full_msg));
 	free(full_msg);
 }
