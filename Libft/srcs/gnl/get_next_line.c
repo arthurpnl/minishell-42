@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 17:22:36 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/24 17:26:09 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/26 11:26:33 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*storage;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
 	if (fd < 0)
     {
         if (storage)
@@ -100,6 +98,8 @@ char	*get_next_line(int fd)
         }
         return (NULL);
     }
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	storage = readbuf(fd, storage);
 	if (!storage)
 		return (NULL);
