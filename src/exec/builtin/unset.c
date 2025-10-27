@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 16:30:54 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/14 18:22:01 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	remove_env_at(t_shell_ctx *ctx, int idx)
+static int	remove_env_at(t_ctx *ctx, int idx)
 {
 	int	j;
 
@@ -29,7 +29,7 @@ static int	remove_env_at(t_shell_ctx *ctx, int idx)
 	return (1);
 }
 
-static int	unset_one_arg(t_shell_ctx *ctx, const char *name)
+static int	unset_one_arg(t_ctx *ctx, const char *name)
 {
 	size_t	len;
 	int		j;
@@ -45,7 +45,7 @@ static int	unset_one_arg(t_shell_ctx *ctx, const char *name)
 	return (0);
 }
 
-int	ft_unset(char **args, t_shell_ctx *ctx)
+int	ft_unset(char **args, t_ctx *ctx)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 16:31:57 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/14 18:22:19 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	free_old_env(char **env)
 	free(env);
 }
 
-int	export_without_args(t_shell_ctx *ctx)
+int	export_without_args(t_ctx *ctx)
 {
 	int	i;
 
@@ -51,7 +51,7 @@ int	export_without_args(t_shell_ctx *ctx)
 	return (0);
 }
 
-int	process_single_arg(char *arg, t_shell_ctx *ctx)
+int	process_single_arg(char *arg, t_ctx *ctx)
 {
 	char	*name;
 	char	*value;

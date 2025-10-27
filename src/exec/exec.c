@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:54:31 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/25 12:26:36 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:57 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
+int	command_dispatch(t_commande *cmd_list, t_ctx *ctx)
 {
 	int	res;
 
@@ -23,16 +23,15 @@ int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 	if (!cmd_list->next)
 	{
 		if (is_empty_cmd(cmd_list))
-    	{
-        	print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
-        	return (ctx->last_status = 127);
-    	}
+		{
+			print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
+			return (ctx->last_status = 127);
+		}
 		if (cmd_list->type == CMD_BUILTIN)
 			ctx->last_status = exec_builtin(cmd_list, ctx, cmd_list);
 		else if (cmd_list->type == CMD_SIMPLE)
 			ctx->last_status = exec_single_cmd(cmd_list, ctx);
-		else if (cmd_list->type == CMD_ABSOLUTE
-			|| cmd_list->type == CMD_RELATIVE)
+		else if (cmd_list->type == CMD_ABS || cmd_list->type == CMD_RELATIVE)
 			ctx->last_status = exec_absolute_cmd(cmd_list, ctx);
 		else
 			ctx->last_status = 1;
@@ -42,7 +41,7 @@ int	command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx)
 	return (ctx->last_status);
 }
 
-int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
+int	exec_absolute_cmd(t_commande *cmd_list, t_ctx *ctx)
 {
 	pid_t	pid;
 	int		status;
@@ -70,32 +69,31 @@ int	exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 	return (ctx->last_status = analyze_child_status(status));
 }
 
-int	exec_command_direct(t_commande *cmd_list, t_commande *full_list, t_shell_ctx *ctx)
+int	exec_command_direct(t_commande *cmd_list, t_commande *head_l, t_ctx *ctx)
 {
 	char	*cmd_path;
-	
+
 	if (is_empty_cmd(cmd_list))
-    {
-        print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
-        cleanup_and_exit(ctx, full_list, 127);
-    }
+	{
+		print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
+		cleanup_and_exit(ctx, head_l, 127);
+	}
 	if (cmd_list->type == CMD_SIMPLE)
 	{
 		cmd_path = create_full_path(cmd_list, ctx->env);
 		if (!cmd_path)
 		{
 			print_cmd_error(cmd_list->args[0], CMD_NOT_FOUND);
-			cleanup_and_exit(ctx, full_list, 127);
+			cleanup_and_exit(ctx, head_l, 127);
 		}
 		execve(cmd_path, cmd_list->args, ctx->env);
-		perror(cmd_list->args[0]); 
+		perror(cmd_list->args[0]);
 		free(cmd_path);
 	}
-	else if (cmd_list->type == CMD_ABSOLUTE || cmd_list->type == CMD_RELATIVE)
+	else if (cmd_list->type == CMD_ABS || cmd_list->type == CMD_RELATIVE)
 	{
 		execve(cmd_list->args[0], cmd_list->args, ctx->env);
-		perror(cmd_list->args[0]);  
+		perror(cmd_list->args[0]);
 	}
-	cleanup_and_exit(ctx, full_list, 127);
-	return (127);
+	return (cleanup_and_exit(ctx, head_l, 127), 127);
 }

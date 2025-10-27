@@ -48,7 +48,7 @@ typedef enum e_cmd_type
 {
 	CMD_SIMPLE,
 	CMD_RELATIVE,
-	CMD_ABSOLUTE,
+	CMD_ABS,
 	CMD_BUILTIN,
 	CMD_EMPTY
 }	t_cmd_type;
@@ -98,17 +98,17 @@ typedef struct s_shell_ctx
 {
 	int		last_status;
 	char	**env;
-}	t_shell_ctx;
+}	t_ctx;
 
 // exec_sig.c
 void			sig_handler(int sig);
 void			setup_signals(int mode);
 void			sig_handler_heredoc(int sig);
-int				handle_signal_interrupt(char **input, t_shell_ctx *ctx);
+int				handle_signal_interrupt(char **input, t_ctx *ctx);
 
 // token.c
 void			add_back_word(t_token_word **token, t_token_word *new);
-int				tokenize_line(t_token **token, char *str, t_shell_ctx *ctx);
+int				tokenize_line(t_token **token, char *str, t_ctx *ctx);
 
 // token_2.c
 char			*delete_quote(char *str);
@@ -117,7 +117,7 @@ int				handle_token_error(char **res, t_token **token);
 
 // token_word.c
 t_token			*new_node(t_token_word *word);
-t_token_word	*split_node_word(char *str, t_shell_ctx *ctx);
+t_token_word	*split_node_word(char *str, t_ctx *ctx);
 
 // ft_split_token.c
 int				fr(char **result, int i);
@@ -146,7 +146,7 @@ void			free_tokens(t_token *head);
 
 // expand.c
 int				is_valid_var_char(char c);
-int				expand_token_word(t_token_word *token, t_shell_ctx *ctx);
+int				expand_token_word(t_token_word *token, t_ctx *ctx);
 char			*expand_status(char *res, int status, int *i);
 
 // check_syntax.c
@@ -169,7 +169,7 @@ void			free_args(char **args);
 void			free_commande(t_commande *cmd);
 void			free_redirection(t_redirection *redir);
 void			free_split(char **split);
-int				exit_shell(t_shell_ctx *ctx);
+int				exit_shell(t_ctx *ctx);
 
 // utils.c
 char			*ft_strjoin(char *s1, char const *s2);
@@ -180,16 +180,16 @@ int				is_it_builtin(char *cmd_name);
 void			identify_cmd_type(t_commande *cmd_list);
 
 // exec.c
-int				command_dispatch(t_commande *cmd_list, t_shell_ctx *ctx);
-int				exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
-int				exec_absolute_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
-void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
-		int i, t_commande *full_list);
-int				exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx);
-int				exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx);
-int				exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx, t_commande *full_list);
-int				exec_command_direct(t_commande *cmd_list, t_commande *full_list, t_shell_ctx *ctx);
-int				close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx);
+int				command_dispatch(t_commande *cmd_list, t_ctx *ctx);
+int				exec_single_cmd(t_commande *cmd_list, t_ctx *ctx);
+int				exec_absolute_cmd(t_commande *cmd_list, t_ctx *ctx);
+void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_ctx *ctx,
+		int i, t_commande *head_l);
+int				exec_pipeline(t_commande *cmd_list, t_ctx *ctx);
+int				exec_builtin_cmd(t_commande *cmd_list, t_ctx *ctx);
+int				exec_builtin(t_commande *cmd_list, t_ctx *ctx, t_commande *head_l);
+int				exec_command_direct(t_commande *cmd_list, t_commande *head_l, t_ctx *ctx);
+int				close_and_wait(t_pipeline *pipeline, t_ctx *ctx);
 
 // exec_utils.c
 char			**ft_split_ex(const char *s, char sep);
@@ -201,7 +201,7 @@ void			*ft_memset(void *s, int c, size_t n);
 void			init_pipeline(t_pipeline *pipeline,
 					t_commande *cmd_list, char **env);
 int				is_empty_cmd(t_commande *cmd);
-int				can_exec(char *path, t_shell_ctx *ctx);
+int				can_exec(char *path, t_ctx *ctx);
 void	print_cmd_error(char *cmd, char *error_msg);
 
 // free.c
@@ -211,8 +211,8 @@ void			close_all_pipes(int **pipes, int count);
 void			free_matrix(char **t);
 
 // cleanup.c
-void			cleanup_all(t_shell_ctx *ctx, t_commande *cmd_list);
-void			cleanup_and_exit(t_shell_ctx *ctx,
+void			cleanup_all(t_ctx *ctx, t_commande *cmd_list);
+void			cleanup_and_exit(t_ctx *ctx,
 					t_commande *cmd_list, int exit_code);
 
 // here_doc.c
@@ -236,21 +236,21 @@ int				handle_append_redirect(t_redirection *redir);
 int				handle_pipe_redirect(int **pipes, int i, int cmd_count);
 
 // builtins
-int				ft_cd(char **args, t_shell_ctx *ctx);
+int				ft_cd(char **args, t_ctx *ctx);
 int				ft_echo(char **args);
 int				ft_env(char **args, char **env);
-int				ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list);
-int				ft_export(char **args, t_shell_ctx *ctx);
+int				ft_exit(char **args, t_ctx *ctx, t_commande *cmd_list);
+int				ft_export(char **args, t_ctx *ctx);
 int				ft_pwd(char **args);
-int				ft_unset(char **args, t_shell_ctx *ctx);
+int				ft_unset(char **args, t_ctx *ctx);
 
 // export.c
-int				add_o_update_env(t_shell_ctx *ctx, char *name, char *value);
-int				update_var_env(t_shell_ctx *ctx,
+int				add_o_update_env(t_ctx *ctx, char *name, char *value);
+int				update_var_env(t_ctx *ctx,
 					int i, char *name, char *value);
-int				add_new_env(t_shell_ctx *ctx, char *name, char *value);
-int				find_var_index(t_shell_ctx *ctx, char *name);
-int				process_single_arg(char *arg, t_shell_ctx *ctx);
+int				add_new_env(t_ctx *ctx, char *name, char *value);
+int				find_var_index(t_ctx *ctx, char *name);
+int				process_single_arg(char *arg, t_ctx *ctx);
 void			free_old_env(char **env);
 
 // cd_utils.c
@@ -260,7 +260,7 @@ void			free_path(char *new_path, char *old_path);
 
 // export_utils.c
 char			**env_copy(char **env, char **new_env, int count);
-int				export_without_args(t_shell_ctx *ctx);
+int				export_without_args(t_ctx *ctx);
 int				parse_export_args(char *args, char **name, char **value);
 int				is_valid_identifier(const char *name);
 char			*build_new_entry(char *name, char *value);

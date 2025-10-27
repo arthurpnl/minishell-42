@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 00:00:00 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/24 19:31:56 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	exec_single_child(t_commande *cmd_list, t_shell_ctx *ctx)
+static void	exec_single_child(t_commande *cmd_list, t_ctx *ctx)
 {
 	char	*cmd_path;
 
@@ -30,7 +30,7 @@ static void	exec_single_child(t_commande *cmd_list, t_shell_ctx *ctx)
 	cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 }
 
-int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
+int	exec_single_cmd(t_commande *cmd_list, t_ctx *ctx)
 {
 	pid_t	pid;
 	int		status;
@@ -58,7 +58,7 @@ int	exec_single_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 }
 
 static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
-				t_shell_ctx *ctx, int i, t_commande *cmd_list)
+				t_ctx *ctx, int i, t_commande *cmd_list)
 {
 	pid_t	pid;
 
@@ -78,7 +78,7 @@ static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
 	return (pid);
 }
 
-int	exec_pipeline(t_commande *cmd_list, t_shell_ctx *ctx)
+int	exec_pipeline(t_commande *cmd_list, t_ctx *ctx)
 {
 	t_pipeline	*pipeline;
 	t_commande	*curr;

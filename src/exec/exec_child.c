@@ -6,14 +6,14 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:42 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/24 15:02:21 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:31:43 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
-		int i, t_commande *full_list)
+void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_ctx *ctx,
+		int i, t_commande *head_l)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -22,21 +22,21 @@ void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_shell_ctx *ctx,
 	if (dispatch_redirect(cmd_list) != 0)
 	{
 		free_pipeline_resources(pipeline);
-		cleanup_and_exit(ctx, full_list, EXIT_FAILURE);
+		cleanup_and_exit(ctx, head_l, EXIT_FAILURE);
 	}
 	if (cmd_list->type == CMD_BUILTIN)
 	{
 		free_pipeline_resources(pipeline);
-		cleanup_and_exit(ctx, full_list, exec_builtin(cmd_list, ctx, full_list));
+		cleanup_and_exit(ctx, head_l, exec_builtin(cmd_list, ctx, head_l));
 	}
 	else
 	{
-    	free_pipeline_resources(pipeline);
-    	exec_command_direct(cmd_list, full_list, ctx);
+		free_pipeline_resources(pipeline);
+		exec_command_direct(cmd_list, head_l, ctx);
 	}
 }
 
-int	close_and_wait(t_pipeline *pipeline, t_shell_ctx *ctx)
+int	close_and_wait(t_pipeline *pipeline, t_ctx *ctx)
 {
 	int	i;
 	int	status;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:53:16 by mehdi             #+#    #+#             */
-/*   Updated: 2025/09/24 19:22:07 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	add_back_word(t_token_word **token, t_token_word *new)
 	tmp->next = new;
 }
 
-t_token	*create_tok(char *word, t_shell_ctx *ctx, char **res, t_token **token)
+t_token	*create_tok(char *word, t_ctx *ctx, char **res, t_token **token)
 {
 	t_token_word	*new_word;
 	t_token			*new;
@@ -80,7 +80,7 @@ t_token	*create_tok(char *word, t_shell_ctx *ctx, char **res, t_token **token)
 	return (new);
 }
 
-int	tokenize_line(t_token **token, char *str, t_shell_ctx *ctx)
+int	tokenize_line(t_token **token, char *str, t_ctx *ctx)
 {
 	char	**res;
 	int		i;

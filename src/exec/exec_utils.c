@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:53:26 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/14 18:28:08 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	is_empty_cmd(t_commande *cmd)
 	return (0);
 }
 
-int	can_exec(char *path, t_shell_ctx *ctx)
+int	can_exec(char *path, t_ctx *ctx)
 {
 	struct stat	infos;
 

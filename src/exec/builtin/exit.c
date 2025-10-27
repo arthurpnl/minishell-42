@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 17:42:11 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/20 12:59:57 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ void	print_error(char **args)
 	ft_putstr_fd(": numeric argument required\n", 2);
 }
 
-static void	handle_exit(t_shell_ctx *ctx, t_commande *cmd_list, int code)
+static void	handle_exit(t_ctx *ctx, t_commande *cmd_list, int code)
 {
 	cleanup_and_exit(ctx, cmd_list, code);
 	exit(code);
 }
 
-int	ft_exit(char **args, t_shell_ctx *ctx, t_commande *cmd_list)
+int	ft_exit(char **args, t_ctx *ctx, t_commande *cmd_list)
 {
 	int	arg_count;
 	int	exit_code;

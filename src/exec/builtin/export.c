@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 16:00:41 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/23 16:12:47 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_export(char **args, t_shell_ctx *ctx)
+int	ft_export(char **args, t_ctx *ctx)
 {
 	int	i;
 	int	status;
@@ -30,7 +30,7 @@ int	ft_export(char **args, t_shell_ctx *ctx)
 	return (status);
 }
 
-int	add_o_update_env(t_shell_ctx *ctx, char *name, char *value)
+int	add_o_update_env(t_ctx *ctx, char *name, char *value)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ int	add_o_update_env(t_shell_ctx *ctx, char *name, char *value)
 		return (update_var_env(ctx, i, name, value));
 }
 
-int	update_var_env(t_shell_ctx *ctx, int i, char *name, char *value)
+int	update_var_env(t_ctx *ctx, int i, char *name, char *value)
 {
 	char	*new_entry;
 
@@ -61,7 +61,7 @@ int	update_var_env(t_shell_ctx *ctx, int i, char *name, char *value)
 	return (0);
 }
 
-int	add_new_env(t_shell_ctx *ctx, char *name, char *value)
+int	add_new_env(t_ctx *ctx, char *name, char *value)
 {
 	char	*new_entry;
 	char	**new_env;
@@ -90,7 +90,7 @@ int	add_new_env(t_shell_ctx *ctx, char *name, char *value)
 	return (0);
 }
 
-int	find_var_index(t_shell_ctx *ctx, char *name)
+int	find_var_index(t_ctx *ctx, char *name)
 {
 	size_t	name_len;
 	int		i;

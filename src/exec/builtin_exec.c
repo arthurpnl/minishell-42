@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:17 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/26 11:33:31 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
+int	exec_builtin_cmd(t_commande *cmd_list, t_ctx *ctx)
 {
 	if (!cmd_list || !cmd_list->args || !cmd_list->args[0])
 		return (1);
@@ -35,7 +35,7 @@ int	exec_builtin_cmd(t_commande *cmd_list, t_shell_ctx *ctx)
 	return (ctx->last_status);
 }
 
-int	exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx, t_commande *full_list)
+int	exec_builtin(t_commande *cmd_list, t_ctx *ctx, t_commande *head_l)
 {
 	int	pid;
 
@@ -47,8 +47,8 @@ int	exec_builtin(t_commande *cmd_list, t_shell_ctx *ctx, t_commande *full_list)
 	if (pid == 0)
 	{
 		if (dispatch_redirect(cmd_list) != 0)
-			cleanup_and_exit(ctx, full_list, EXIT_FAILURE);
-		cleanup_and_exit(ctx, full_list, exec_builtin_cmd(cmd_list, ctx));
+			cleanup_and_exit(ctx, head_l, EXIT_FAILURE);
+		cleanup_and_exit(ctx, head_l, exec_builtin_cmd(cmd_list, ctx));
 	}
 	else if (pid > 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 16:24:10 by arpenel           #+#    #+#             */
-/*   Updated: 2025/09/26 18:09:43 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	*find_target(char **args)
 	return (target);
 }
 
-int	ft_cd(char **args, t_shell_ctx *ctx)
+int	ft_cd(char **args, t_ctx *ctx)
 {
 	char	*old_path;
 	char	*new_path;

@@ -14,7 +14,7 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
-static void	handle_unclosed_quote(char *input, t_shell_ctx *ctx)
+static void	handle_unclosed_quote(char *input, t_ctx *ctx)
 {
 	ctx->last_status = 2;
 	printf("unclosed quote\n");
@@ -22,7 +22,7 @@ static void	handle_unclosed_quote(char *input, t_shell_ctx *ctx)
 }
 
 static int	handle_syntax_and_cmd(t_token **head, t_commande **cmds,
-	t_shell_ctx *ctx)
+	t_ctx *ctx)
 {
 	if (check_syntax(*head))
 	{
@@ -40,7 +40,7 @@ static int	handle_syntax_and_cmd(t_token **head, t_commande **cmds,
 	return (0);
 }
 
-static void	process_input(char *input, t_shell_ctx *ctx)
+static void	process_input(char *input, t_ctx *ctx)
 {
 	char		*str;
 	t_token		*head;
@@ -69,7 +69,7 @@ static void	process_input(char *input, t_shell_ctx *ctx)
 	free_commande(cmds);
 }
 
-static int	init_context(t_shell_ctx *ctx, char **envp)
+static int	init_context(t_ctx *ctx, char **envp)
 {
 	if (!envp)
 		return (0);
@@ -86,7 +86,7 @@ static int	init_context(t_shell_ctx *ctx, char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_shell_ctx	ctx;
+	t_ctx	ctx;
 	char		*input;
 
 	(void)ac;

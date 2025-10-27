@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 16:42:59 by arpenel           #+#    #+#             */
-/*   Updated: 2025/09/25 16:43:00 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:29:31 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	identify_cmd_type(t_commande *cmd_list)
 			if (is_it_builtin(current->args[0]))
 				current->type = CMD_BUILTIN;
 			else if (current->args[0][0] == '/')
-				current->type = CMD_ABSOLUTE;
+				current->type = CMD_ABS;
 			else if (current->args[0][0] == '.' && current->args[0][1] == '/')
 				current->type = CMD_RELATIVE;
 			else if (current->args[0][0] == '.' && current->args[0][1] == '.'

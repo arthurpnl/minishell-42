@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 11:18:41 by mehdi             #+#    #+#             */
-/*   Updated: 2025/10/09 16:53:24 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*expand_variable(char *res, const char *word, int *i, char **env)
 	return (res);
 }
 
-char	*expand_dollar(char *res, const char *word, int *i, t_shell_ctx *ctx)
+char	*expand_dollar(char *res, const char *word, int *i, t_ctx *ctx)
 {
 	if (word[*i + 1] == '?')
 		return (expand_status(res, ctx->last_status, i));
@@ -64,7 +64,7 @@ static char	*append_char(char *res, char c)
 	return (ft_strjoin(res, tmp));
 }
 
-int	expand_token_word(t_token_word *token, t_shell_ctx *ctx)
+int	expand_token_word(t_token_word *token, t_ctx *ctx)
 {
 	int		i;
 	char	*res;

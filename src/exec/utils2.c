@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:51:55 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/26 11:37:35 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:25:24 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void	*ft_memset(void *s, int c, size_t n)
 
 void	print_cmd_error(char *cmd, char *error_msg)
 {
-	char *full_msg;
-	char *tmp;
+	char	*full_msg;
+	char	*tmp;
 
 	if (cmd)
 	{

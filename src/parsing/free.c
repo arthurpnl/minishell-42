@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 19:15:51 by mehdi             #+#    #+#             */
-/*   Updated: 2025/10/24 17:24:28 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	free_split(char **split)
 	free(split);
 }
 
-int	exit_shell(t_shell_ctx *ctx)
+int	exit_shell(t_ctx *ctx)
 {
 	printf("exit\n");
 	free_envp(ctx->env);

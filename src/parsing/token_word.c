@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:24:43 by mehdi             #+#    #+#             */
-/*   Updated: 2025/10/09 15:55:30 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	fill_expandable(t_token_word *token)
 	return (0);
 }
 
-static int	add_word_to_list(t_token_word **head, char *str, t_shell_ctx *ctx)
+static int	add_word_to_list(t_token_word **head, char *str, t_ctx *ctx)
 {
 	t_token_word	*new;
 
@@ -78,7 +78,7 @@ static int	add_word_to_list(t_token_word **head, char *str, t_shell_ctx *ctx)
 	return (0);
 }
 
-t_token_word	*split_node_word(char *str, t_shell_ctx *ctx)
+t_token_word	*split_node_word(char *str, t_ctx *ctx)
 {
 	char			**word;
 	int				i;
