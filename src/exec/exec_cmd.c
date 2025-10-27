@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 00:00:00 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/27 11:30:11 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 13:15:29 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	exec_single_cmd(t_commande *cmd_list, t_ctx *ctx)
 }
 
 static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
-				t_ctx *ctx, int i, t_commande *cmd_list)
+				t_ctx *ctx, t_commande *cmd_list)
 {
 	pid_t	pid;
 
@@ -71,7 +71,7 @@ static int	fork_pipeline_child(t_commande *curr, t_pipeline *pipeline,
 	}
 	if (pid == 0)
 	{
-		exec_child(curr, pipeline, ctx, i, cmd_list);
+		exec_child(curr, pipeline, ctx, cmd_list);
 		free_pipeline_resources(pipeline);
 		cleanup_and_exit(ctx, cmd_list, EXIT_FAILURE);
 	}
@@ -82,7 +82,6 @@ int	exec_pipeline(t_commande *cmd_list, t_ctx *ctx)
 {
 	t_pipeline	*pipeline;
 	t_commande	*curr;
-	int			i;
 
 	pipeline = malloc(sizeof(t_pipeline));
 	if (!pipeline)
@@ -91,13 +90,13 @@ int	exec_pipeline(t_commande *cmd_list, t_ctx *ctx)
 	if (create_pipes(pipeline) != 0)
 		return (1);
 	setup_signals(2);
-	i = 0;
 	curr = cmd_list;
 	while (curr)
 	{
-		pipeline->pids[i] = fork_pipeline_child(curr, pipeline, ctx, i, cmd_list);
+		pipeline->pids[pipeline->i] = fork_pipeline_child(curr,
+				pipeline, ctx, cmd_list);
 		curr = curr->next;
-		i++;
+		pipeline->i++;
 	}
 	close_all_pipes(pipeline->pipes, pipeline->cmd_count);
 	ctx->last_status = close_and_wait(pipeline, ctx);

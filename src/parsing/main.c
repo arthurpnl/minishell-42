@@ -71,9 +71,19 @@ static void	process_input(char *input, t_ctx *ctx)
 
 static int	init_context(t_ctx *ctx, char **envp)
 {
-	if (!envp)
-		return (0);
-	ctx->env = ft_cpy_envp(envp);
+	char	*default_env[5];
+
+	default_env[0] = "USER=arpenel";
+	default_env[1] = "PATH=/home/arpenel/.local/funcheck/host:/home/\
+arpenel/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin\
+:/bin:/usr/games:/usr/local/games:/snap/bin";
+	default_env[2] = "HOME=/home/arpenel";
+	default_env[3] = "LOGNAME=arpenel";
+	default_env[4] = NULL;
+	if (!envp || !envp[0])
+		ctx->env = ft_cpy_envp(default_env);
+	else
+		ctx->env = ft_cpy_envp(envp);
 	if (!ctx->env)
 	{
 		ft_putstr_fd("malloc_error\n", 2);
@@ -87,7 +97,7 @@ static int	init_context(t_ctx *ctx, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	t_ctx	ctx;
-	char		*input;
+	char	*input;
 
 	(void)ac;
 	(void)av;
@@ -95,7 +105,7 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	while (1)
 	{
-		g_signal = 0;  // ← Reset AVANT readline
+		g_signal = 0;
 		input = readline(COLOR_RED "minishell$ " COLOR_RESET);
 		if (!input)
 			return (exit_shell(&ctx));

@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:45:25 by arthur            #+#    #+#             */
-/*   Updated: 2025/10/13 16:55:06 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 13:06:52 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	init_pipeline(t_pipeline *pipeline, t_commande *cmd_list, char **env)
 	pipeline->cmd_count = count_command(cmd_list);
 	pipeline->env = env;
 	pipeline->last_status = 0;
+	pipeline->i = 0;
 	pipeline->pids = malloc(sizeof(pid_t) * pipeline->cmd_count);
 	if (!pipeline->pids)
 		exit(EXIT_FAILURE);

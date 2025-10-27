@@ -6,19 +6,19 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:58:42 by arpenel           #+#    #+#             */
-/*   Updated: 2025/10/27 11:31:43 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/10/27 13:10:34 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_child(t_commande *cmd_list, t_pipeline *pipeline, t_ctx *ctx,
-		int i, t_commande *head_l)
+void	exec_child(t_commande *cmd_list, t_pipeline *pipeline,
+	t_ctx *ctx, t_commande *head_l)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (pipeline->cmd_count > 1)
-		handle_pipe_redirect(pipeline->pipes, i, pipeline->cmd_count);
+		handle_pipe_redirect(pipeline->pipes, pipeline->i, pipeline->cmd_count);
 	if (dispatch_redirect(cmd_list) != 0)
 	{
 		free_pipeline_resources(pipeline);
